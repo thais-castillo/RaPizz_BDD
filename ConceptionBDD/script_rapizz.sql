@@ -8,8 +8,7 @@ CREATE TABLE Pizza(
    prix DECIMAL(10,2) NOT NULL,
    PRIMARY KEY(id_pizza),
    CONSTRAINT chk_pizza CHECK (prix > 0), 
-   UNIQUE(nom),
-   CONSTRAINT chk_taille CHECK (nom IN ('Naine', 'Humaine', 'Hogresse')) 
+   UNIQUE(nom)
 );
 
 CREATE TABLE Ingredient(
@@ -32,7 +31,7 @@ CREATE TABLE Client(
    nom VARCHAR(50) NOT NULL,
    solde DECIMAL(10,2) NOT NULL DEFAULT 0,
    date_abonnement DATE NOT NULL,
-   bonificaction INT NOT NULL DEFAULT 0,
+   bonification INT NOT NULL DEFAULT 0,
    PRIMARY KEY(Id_Client),
    CONSTRAINT chk_solde CHECK (solde >= 0),
    CONSTRAINT chk_bonification CHECK (bonification BETWEEN 0 AND 9) 
@@ -41,7 +40,7 @@ CREATE TABLE Client(
 CREATE TABLE Vehicule(
    Id_Vehicule INT AUTO_INCREMENT,
    type VARCHAR(50) NOT NULL,
-   immatricule INT NOT NULL,
+   immatricule VARCHAR(20) NOT NULL,
    PRIMARY KEY(Id_Vehicule),
    UNIQUE(immatricule),
    CONSTRAINT chk_vehicule CHECK (type IN ('Voiture', 'Moto', 'Velo')) 
@@ -50,7 +49,8 @@ CREATE TABLE Vehicule(
 CREATE TABLE Livraison(
    id_livraison INT AUTO_INCREMENT,
    date_ DATE NOT NULL,
-   duree INT NOT NULL,
+   duree INT,
+   taille VARCHAR(10) NOT NULL,
    prix_pizza DECIMAL(10,2) NOT NULL,
    gratuit BOOLEAN NOT NULL,
    heure TIME NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE Livraison(
    FOREIGN KEY(Id_Client) REFERENCES Client(Id_Client) ON DELETE RESTRICT ON UPDATE CASCADE,
    FOREIGN KEY(Id_Vehicule) REFERENCES Vehicule(Id_Vehicule) ON DELETE RESTRICT ON UPDATE CASCADE,
    FOREIGN KEY(id_pizza) REFERENCES Pizza(id_pizza) ON DELETE RESTRICT ON UPDATE CASCADE,
-   CONSTRAINT chk_taille    CHECK (taille IN ('Naine', 'Humaine', 'Ogresse')),  
+   CONSTRAINT chk_taille    CHECK (taille IN ('Naine', 'Humaine', 'Hogresse')),  
    CONSTRAINT chk_delai     CHECK (duree IS NULL OR duree >= 0),
    CONSTRAINT chk_prix_liv  CHECK (prix_pizza > 0)
 );
