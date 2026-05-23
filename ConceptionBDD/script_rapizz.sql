@@ -43,7 +43,7 @@ CREATE TABLE Vehicule(
    immatricule VARCHAR(20) NOT NULL,
    PRIMARY KEY(Id_Vehicule),
    UNIQUE(immatricule),
-   CONSTRAINT chk_vehicule CHECK (type IN ('Voiture', 'Moto', 'Velo')) 
+   CONSTRAINT chk_vehicule CHECK (type IN ('Voiture', 'Moto', 'Velo','Scooter')) 
 );
 
 CREATE TABLE Livraison(
