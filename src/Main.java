@@ -1,5 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        new VueMenu();
+        VueMenu vue = new VueMenu();
+        ControleurMenu controleur = new ControleurMenu(vue);
+        vue.setVisible(true);
     }
 }
