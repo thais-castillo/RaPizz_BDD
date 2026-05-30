@@ -13,6 +13,7 @@ public class VueMenu extends JFrame {
 
     private final Color COLOR_BG = new Color(28, 28, 28);
     private final Color COLOR_PRIMARY = new Color(211, 47, 47);
+    private final Color COLOR_STATS = new Color(0, 110, 80);
     private final Color COLOR_TEXT_LIGHT = new Color(245, 245, 245);
     private final Color COLOR_TEXT_MUTED = new Color(175, 175, 175);
 
@@ -52,7 +53,7 @@ public class VueMenu extends JFrame {
 
         // Bouton stats
         gbc.gridy = 3;
-        btnStats = createStyledButton("Voir les statistiques", new Color(0, 0, 255));
+        btnStats = createStyledButton("Voir les statistiques", COLOR_STATS);
         mainPanel.add(btnStats, gbc);
 
         // Bouton Quitter
@@ -101,5 +102,6 @@ public class VueMenu extends JFrame {
     
     // Getters pour que le contrôleur puisse manipuler les composants si besoin
     public JButton getBtnCommander() { return btnCommander; }
+    public JButton getBtnStats() { return btnStats; }
     public JButton getBtnQuitter() { return btnQuitter; }
 }

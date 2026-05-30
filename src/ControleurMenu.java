@@ -11,9 +11,15 @@ public class ControleurMenu {
     public ControleurMenu(VueMenu vue) {
         this.vue = vue;
 
+        System.out.println("[ControleurMenu] initialisation du contrôleur menu.");
+
         // On attache les actions aux boutons de la vue
         this.vue.addCommanderListener(new ActionCommander());
+        System.out.println("[ControleurMenu] listener Commander attaché.");
+        this.vue.addStatsListener(new ActionStats());
+        System.out.println("[ControleurMenu] listener Stats attaché.");
         this.vue.addQuitterListener(new ActionQuitter());
+        System.out.println("[ControleurMenu] listener Quitter attaché.");
         
         // On gère le style interactif (hover) directement depuis le contrôleur
         gererEffetsHover();
@@ -40,6 +46,26 @@ public class ControleurMenu {
         public void actionPerformed(ActionEvent e) {
             System.out.println("[Controleur] Fermeture de l'application.");
             System.exit(0);
+        }
+    }
+
+    // Classe interne pour l'action du bouton "Voir les statistiques"
+    private class ActionStats implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("[Controleur] Clic détecté sur Stats — tentative d'ouverture.");
+            try {
+                VueStatistiques vueStats = new VueStatistiques();
+                new ControleurStatistiques(vueStats);
+                System.out.println("[Controleur] VueStatistiques créée avec succès.");
+            } catch (Throwable ex) {
+                System.err.println("[Controleur] Erreur lors de l'ouverture de la page statistiques : ");
+                ex.printStackTrace();
+            }
+
+            // fermer le menu après ouverture
+            System.out.println("[Controleur] Fermeture du menu principal.");
+            vue.dispose();
         }
     }
 
@@ -70,6 +96,19 @@ public class ControleurMenu {
             @Override
             public void mouseExited(MouseEvent e) {
                 vue.getBtnQuitter().setBackground(colorGrey);
+            }
+        });
+
+        vue.getBtnStats().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                vue.getBtnStats().setBackground(colorAccent.darker());
+                vue.getBtnStats().setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vue.getBtnStats().setBackground(colorAccent);
             }
         });
     }
