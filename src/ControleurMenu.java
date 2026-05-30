@@ -13,13 +13,10 @@ public class ControleurMenu {
 
         System.out.println("[ControleurMenu] initialisation du contrôleur menu.");
 
-        // On attache les actions aux boutons de la vue
+        // À remplacer dans le constructeur de ControleurMenu.java :
         this.vue.addCommanderListener(new ActionCommander());
-        System.out.println("[ControleurMenu] listener Commander attaché.");
         this.vue.addStatsListener(new ActionStats());
-        System.out.println("[ControleurMenu] listener Stats attaché.");
         this.vue.addQuitterListener(new ActionQuitter());
-        System.out.println("[ControleurMenu] listener Quitter attaché.");
         
         // On gère le style interactif (hover) directement depuis le contrôleur
         gererEffetsHover();
@@ -71,45 +68,46 @@ public class ControleurMenu {
     }
 
     // Gestion propre des animations au survol de la souris
+    // Remplace la méthode gererEffetsHover() à la fin de ton ControleurMenu.java :
     private void gererEffetsHover() {
-        Color colorPrimary = new Color(211, 47, 47);
-        Color colorAccent = new Color(56, 142, 60); // Vert basilic au survol
-        Color colorGrey = new Color(70, 70, 70);
+        // Couleurs de base de ton nouveau design
+        Color vertBase = new Color(0, 110, 80);
+        Color bleuBase = new Color(35, 90, 160);
+        Color rougeBase = new Color(180, 30, 30);
 
+        // Effet Hover pour le bouton Commander (Vert)
         vue.getBtnCommander().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                vue.getBtnCommander().setBackground(colorAccent);
-                vue.getBtnCommander().setCursor(new Cursor(Cursor.HAND_CURSOR));
+                vue.getBtnCommander().setBackground(vertBase.brighter());
             }
             @Override
             public void mouseExited(MouseEvent e) {
-                vue.getBtnCommander().setBackground(colorPrimary);
+                vue.getBtnCommander().setBackground(vertBase);
             }
         });
 
-        vue.getBtnQuitter().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                vue.getBtnQuitter().setBackground(colorGrey.brighter());
-                vue.getBtnQuitter().setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                vue.getBtnQuitter().setBackground(colorGrey);
-            }
-        });
-
+        // Effet Hover pour le bouton Stats (Bleu)
         vue.getBtnStats().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                vue.getBtnStats().setBackground(colorAccent.darker());
-                vue.getBtnStats().setCursor(new Cursor(Cursor.HAND_CURSOR));
+                vue.getBtnStats().setBackground(bleuBase.brighter());
             }
-
             @Override
             public void mouseExited(MouseEvent e) {
-                vue.getBtnStats().setBackground(colorAccent);
+                vue.getBtnStats().setBackground(bleuBase);
+            }
+        });
+
+        // Effet Hover pour le bouton Quitter (Rouge)
+        vue.getBtnQuitter().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                vue.getBtnQuitter().setBackground(rougeBase.brighter());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vue.getBtnQuitter().setBackground(rougeBase);
             }
         });
     }
