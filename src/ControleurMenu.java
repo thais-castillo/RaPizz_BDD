@@ -28,9 +28,9 @@ public class ControleurMenu {
             // 1. Fermer ou masquer la vue actuelle
             vue.dispose(); 
             
-            // 2. Ouvrir la vue suivante (Exemple : VueCommande)
-            VueCommande vueCommande = new VueCommande();
-            ControleurCommande controleurCommande = new ControleurCommande(vueCommande);
+            // 2. Ouvrir la vue suivante (VueClient)
+            VueClient vueClient = new VueClient();
+            ControleurClient controleurClient = new ControleurClient(vueClient);
         }
     }
 
