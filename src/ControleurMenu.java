@@ -25,18 +25,19 @@ public class ControleurMenu {
         gererEffetsHover();
     }
 
-    // Classe interne pour l'action du bouton "Commander"
+    // À remplacer dans votre ControleurMenu.java :
     private class ActionCommander implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("[Controleur] Clic sur Commander détecté.");
+            System.out.println("[Controleur] Changement de vue : Direction l'enregistrement des ventes.");
             
-            // 1. Fermer ou masquer la vue actuelle
+            // 1. Fermer le menu principal
             vue.dispose(); 
             
-            // 2. Ouvrir la vue suivante (VueClient)
-            VueClient vueClient = new VueClient();
-            ControleurClient controleurClient = new ControleurClient(vueClient);
+            // 2. Ouvrir l'interface de vente pour l'employé
+            VueVente vueVente = new VueVente();
+            ControleurVente controleurVente = new ControleurVente(vueVente);
+            vueVente.setVisible(true); // On l'affiche
         }
     }
 
