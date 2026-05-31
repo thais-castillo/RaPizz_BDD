@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -56,8 +57,13 @@ public class ControleurMenu {
         public void actionPerformed(ActionEvent e) {
             System.out.println("[Controleur] Clic détecté sur Stats — tentative d'ouverture.");
             try {
-                VueStatistiques vueStats = new VueStatistiques();
+                // Récupération des statistiques depuis la base
+                StatistiquesDAO dao = new StatistiquesDAO();
+                Statistiques stats = dao.chargerStatistiques();
+
+                VueStatistiques vueStats = new VueStatistiques(stats);
                 new ControleurStatistiques(vueStats);
+
                 System.out.println("[Controleur] VueStatistiques créée avec succès.");
             } catch (Throwable ex) {
                 System.err.println("[Controleur] Erreur lors de l'ouverture de la page statistiques : ");
