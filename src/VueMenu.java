@@ -7,6 +7,7 @@ public class VueMenu extends JFrame {
     private JButton btnCommander;
     private JButton btnStats;
     private JButton btnQuitter;
+    private JButton btnLivraisons;
 
     // Constantes graphiques unifiées
     private static final Color ROUGE = new Color(180, 30, 30);
@@ -79,13 +80,15 @@ public class VueMenu extends JFrame {
         menuCard.add(Box.createVerticalStrut(25));
 
         // Boutons
-        btnCommander = createStyledMenuButton("Passer une commande", VERT);
+        btnCommander = createStyledMenuButton("Ajouter une commande", VERT);
         btnStats = createStyledMenuButton("Consulter les statistiques", new Color(35, 90, 160));
-        
+        btnLivraisons = createStyledMenuButton("Suivi des livraisons en cours", new Color(30, 130, 140));
+
         menuCard.add(btnCommander);
         menuCard.add(Box.createVerticalStrut(15));
+        menuCard.add(btnLivraisons);
+        menuCard.add(Box.createVerticalStrut(15));
         menuCard.add(btnStats);
-
         center.add(menuCard);
         return center;
     }
@@ -124,9 +127,11 @@ public class VueMenu extends JFrame {
 
     public void addCommanderListener(ActionListener listener) { btnCommander.addActionListener(listener); }
     public void addStatsListener(ActionListener listener) { btnStats.addActionListener(listener); }
+    public void addLivraisonsListener(ActionListener listener) { btnLivraisons.addActionListener(listener); }
     public void addQuitterListener(ActionListener listener) { btnQuitter.addActionListener(listener); }
 
     public JButton getBtnCommander() { return btnCommander; }
     public JButton getBtnStats() { return btnStats; }
+    public JButton getBtnLivraisons() { return btnLivraisons; }
     public JButton getBtnQuitter() { return btnQuitter; }
 }

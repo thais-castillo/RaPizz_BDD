@@ -18,6 +18,7 @@ public class ControleurMenu {
         this.vue.addCommanderListener(new ActionCommander());
         this.vue.addStatsListener(new ActionStats());
         this.vue.addQuitterListener(new ActionQuitter());
+        this.vue.addLivraisonsListener(new ActionLivraisons());
         
         // On gère le style interactif (hover) directement depuis le contrôleur
         gererEffetsHover();
@@ -73,6 +74,16 @@ public class ControleurMenu {
         }
     }
 
+    private class ActionLivraisons implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        vue.dispose();
+        VueSuiviLivraisons vsec = new VueSuiviLivraisons();
+        new ControleurSuiviLivraisons(vsec); // Le tableau de bord temps réel
+        vsec.setVisible(true);
+    }
+}
+
     // Gestion propre des animations au survol de la souris
     // Remplace la méthode gererEffetsHover() à la fin de ton ControleurMenu.java :
     private void gererEffetsHover() {
@@ -80,6 +91,7 @@ public class ControleurMenu {
         Color vertBase = new Color(0, 110, 80);
         Color bleuBase = new Color(35, 90, 160);
         Color rougeBase = new Color(180, 30, 30);
+        Color cyanBase = new Color(30, 130, 140);
 
         // Effet Hover pour le bouton Commander (Vert)
         vue.getBtnCommander().addMouseListener(new MouseAdapter() {
@@ -102,6 +114,17 @@ public class ControleurMenu {
             @Override
             public void mouseExited(MouseEvent e) {
                 vue.getBtnStats().setBackground(bleuBase);
+            }
+        });
+
+        vue.getBtnLivraisons().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                vue.getBtnLivraisons().setBackground(cyanBase.brighter());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vue.getBtnLivraisons().setBackground(cyanBase);
             }
         });
 
