@@ -83,7 +83,6 @@ public class LivraisonDAO {
         Connection cnx = BaseDeDonnee.getInstance().getDatabase();
         if (cnx == null) return false;
 
-        // Déclarations des variables pour le calcul du remboursement
         int idClient = -1;
         double prixPizza = 0.0;
         boolean dejaGratuit = false;
@@ -99,17 +98,15 @@ public class LivraisonDAO {
                         prixPizza = rs.getDouble("prix_pizza");
                         dejaGratuit = rs.getBoolean("gratuit");
                     } else {
-                        // Si l'ID n'existe pas dans la table
                         return false;
                     }
                 }
             }
 
             // 2. Règle métier : Si durée > 30 min et que la pizza n'était pas déjà offerte (fidélité)
-            // Alors elle devient gratuite à cause du retard.
             boolean appliquerRetard = (duree > 30) && !dejaGratuit;
 
-            // 3. Mise à jour de la fiche de livraison (on injecte la durée et le nouvel état du flag gratuit)
+            // 3. Mise à jour de la fiche de livraison
             String sqlUpdateLiv = "UPDATE Livraison SET duree = ?, gratuit = ? WHERE id_livraison = ?";
             try (PreparedStatement stmtUpdate = cnx.prepareStatement(sqlUpdateLiv)) {
                 stmtUpdate.setInt(1, duree);
@@ -118,15 +115,8 @@ public class LivraisonDAO {
                 stmtUpdate.executeUpdate();
             }
 
-            // 4. Si la pizza passe gratuite pour retard, on crédite instantanément le solde du client
-            if (appliquerRetard) {
-                String sqlRembourse = "UPDATE Client SET solde = solde + ? WHERE Id_Client = ?";
-                try (PreparedStatement stmtRembourse = cnx.prepareStatement(sqlRembourse)) {
-                    stmtRembourse.setDouble(1, prixPizza);
-                    stmtRembourse.setInt(2, idClient);
-                    stmtRembourse.executeUpdate();
-                }
-            }
+            // CORRECTION : On a supprimé le "UPDATE Client SET solde = solde + ..." 
+            // qui provoquait le double remboursement (14€ au lieu de 7€).
 
             return true;
 

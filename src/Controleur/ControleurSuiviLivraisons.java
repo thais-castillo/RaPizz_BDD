@@ -89,13 +89,20 @@ public class ControleurSuiviLivraisons {
     private class ActionCloturerDirect implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Puisqu'on clique sur le bouton directement dans la cellule, JTable sait quelle ligne est active
+            // Détermination précise de la ligne ayant cliqué sur le bouton
             int ligneSelectionnee = vue.getTableau().getEditingRow();
             
-            // Sécurité si le clic n'est pas bien capté pendant le refresh
             if (ligneSelectionnee == -1) {
                 ligneSelectionnee = vue.getTableau().getSelectedRow();
             }
+            
+            // Sécurité ultime : si l'index est toujours à -1, on retrouve la ligne via la position du bouton
+            if (ligneSelectionnee == -1) {
+                java.awt.Component btn = (java.awt.Component) e.getSource();
+                java.awt.Point point = javax.swing.SwingUtilities.convertPoint(btn, 0, 0, vue.getTableau());
+                ligneSelectionnee = vue.getTableau().rowAtPoint(point);
+            }
+            
             if (ligneSelectionnee == -1) return;
 
             // 1. Récupération de l'ID de livraison sur la ligne cliquée
@@ -125,7 +132,12 @@ public class ControleurSuiviLivraisons {
                 boolean succes = livraisonDAO.cloturerLivraison(idLivraison, duree);
 
                 if (succes) {
-                    JOptionPane.showMessageDialog(vue, "Livraison clôturée !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    // Petit message d'alerte si la pizza a généré un retard
+                    if (duree > 30) {
+                        JOptionPane.showMessageDialog(vue, "Livraison clôturée !\n⚠️ Retard constaté (> 30 min) : La pizza est offerte et le client a été remboursé.", "Alerte Retard", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(vue, "Livraison clôturée avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    }
                     
                     // 4. Force le rechargement immédiat pour enlever la ligne
                     livraisonsCache = livraisonDAO.getLivraisonsEnCours();
