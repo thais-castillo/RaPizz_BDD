@@ -82,35 +82,54 @@ public class ControleurVente {
         // Adaptation pour le 'H' de 'Hogresse' demandé par ta contrainte SQL
         String tailleSQL = taille.equals("Ogresse") ? "Hogresse" : taille;
 
-        // Enregistrement en BDD (fidelite geree en SQL)
-        LivraisonResultat resultat = new LivraisonDAO().enregistrerLivraison(
-            client.getIdClient(),
-            pizza.getIdPizza(),
-            livreur.getIdLivreur(),
-            vehicule.getIdVehicule(),
-            tailleSQL,
-            prixCalcule
-        );
+        // Règle de fidélité
+        double montantADebiter = prixCalcule;
+        int futursPoints = client.getBonification() + 1;
+        boolean estGratuite = false;
 
-        if (resultat.isSucces()) {
-            String msgSucces = "Commande validee !\n";
-            if (resultat.isGratuit()) {
-                msgSucces += "Offert par la maison (fidelite) !";
+        if (client.getBonification() >= 9) { 
+            montantADebiter = 0.0; // Le client ne paye rien
+            futursPoints = 0;
+            estGratuite = true;
+        }
+
+        // Vérification du solde du client
+        double nouveauSolde = client.getSolde() - montantADebiter;
+        if (nouveauSolde < 0) {
+            JOptionPane.showMessageDialog(vue, "⚠️ Solde insuffisant !", "Erreur de paiement", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Enregistrement en BDD
+        // 1. Mise à jour du client (débit + points)
+        boolean updateClientOK = clientDAO.mettreAJourSoldeEtFidelite(client.getIdClient(), nouveauSolde, futursPoints);
+        
+        if (updateClientOK) {
+            // 2. Insertion de la livraison (on enregistre le prix calculé, mais le flag gratuit indique la gratuité)
+            boolean insertionLivraisonOK = new LivraisonDAO().enregistrerLivraison(
+                client.getIdClient(), 
+                pizza.getIdPizza(), 
+                livreur.getIdLivreur(), 
+                vehicule.getIdVehicule(), 
+                tailleSQL, 
+                prixCalcule, // Reste > 0 pour valider le CHECK SQL
+                estGratuite
+            );
+
+            if (insertionLivraisonOK) {
+                String msgSucces = "Commande validée !\n";
+                if (estGratuite) {
+                    msgSucces += "🎁 Offert par la maison (10ème pizza) !";
+                } else {
+                    msgSucces += "Débité : " + String.format("%.2f", montantADebiter) + " €";
+                }
+                JOptionPane.showMessageDialog(vue, msgSucces, "Succès", JOptionPane.INFORMATION_MESSAGE);
+                remplirDonneesFormulaire(); // Rafraîchit l'affichage du solde
             } else {
-                msgSucces += "Debite : " + String.format("%.2f", prixCalcule) + " EUR";
+                JOptionPane.showMessageDialog(vue, "Erreur Livraison SQL.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
-            msgSucces += "\nSolde restant : " + String.format("%.2f", resultat.getSoldeApres()) + " EUR";
-            JOptionPane.showMessageDialog(vue, msgSucces, "Succes", JOptionPane.INFORMATION_MESSAGE);
-            remplirDonneesFormulaire();
         } else {
-            String err = resultat.getErreur();
-            if (err != null && err.contains("SOLDE_INSUFFISANT")) {
-                JOptionPane.showMessageDialog(vue, "Solde insuffisant.", "Erreur de paiement", JOptionPane.WARNING_MESSAGE);
-            } else if (err != null && err.contains("CLIENT_INEXISTANT")) {
-                JOptionPane.showMessageDialog(vue, "Client introuvable.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(vue, "Erreur SQL lors de l'enregistrement.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(vue, "Erreur Client SQL.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
