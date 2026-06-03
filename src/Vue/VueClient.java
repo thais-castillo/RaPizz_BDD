@@ -1,3 +1,4 @@
+package Vue;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -6,19 +7,16 @@ import java.net.URL;
 
 public class VueClient extends JFrame {
 
-    // ══════════════════════════════════════════════════════════
-    //  DONNÉES PIZZAS — remplace les URL par tes vraies images
-    // ══════════════════════════════════════════════════════════
     private static final Object[][] PIZZAS = {
         // { "Nom",           prix,  "URL_IMAGE" }
-        { "Margherita",    8.50,  "assets/margherita_pizza.png"},
-        { "Regina",        9.00,  "https://REMPLACER_ICI/regina.jpg"        },
-        { "Pepperoni",     9.50,  "https://REMPLACER_ICI/pepperoni.jpg"     },
-        { "Végétarienne", 10.00,  "https://REMPLACER_ICI/vegetarienne.jpg"  },
-        { "Hawaiienne",   11.00,  "https://REMPLACER_ICI/hawaiienne.jpg"    },
-        { "Quatre Fromages",12.00,"https://REMPLACER_ICI/quatre_fromages.jpg"},
-        { "Calzone",      11.50,  "https://REMPLACER_ICI/calzone.jpg"       },
-        { "BBQ Chicken",  12.50,  "https://REMPLACER_ICI/bbq_chicken.jpg"   },
+        { "Margherita",    8.50,  "https://eu.ooni.com/cdn/shop/articles/20220211142754-margherita-9920_0483214a-7057-4277-9a3b-f2ab17c01e13.jpg"},
+        { "Regina",        9.00,  "https://www.fresh.fr/wp-content/uploads/2024/09/Pizza-regina-1-scaled-e1758634889385-811x900.jpg"        },
+        { "Pepperoni",     9.50,  "https://eu.ooni.com/cdn/shop/articles/pepperoni-pizza_6ac5fa40-65b7-4e3b-a8b9-7ca5ccc05dfd.jpg"     },
+        { "Végétarienne", 10.00,  "https://www.flameoven.com/cdn/shop/articles/pizza-parmigiana.jpg"  },
+        { "Hawaiienne",   11.00,  "https://cache.marieclaire.fr/data/photo/w1000_c17/cuisine/4l/pizza-hawaienne-ananas-jambon.jpg"    },
+        { "Quatre Fromages",12.00,"https://img.cuisineaz.com//2023/01/24/i190902-pizza-aux-4-fromages.jpeg"},
+        { "Calzone",      11.50,  "https://assets.afcdn.com/recipe/20161130/7916_w1024h1024c1cx2808cy1872.jpg"       },
+        { "BBQ Chicken",  12.50,  "https://cdn.shopify.com/s/files/1/0901/1465/4510/files/20241120135303-bbqpizza.jpg"   },
         { "Chèvre Miel",  13.00,  "https://REMPLACER_ICI/chevre_miel.jpg"   },
         { "Mexicaine",    12.00,  "https://REMPLACER_ICI/mexicaine.jpg"     },
         { "Carnivore",    13.50,  "https://REMPLACER_ICI/carnivore.jpg"     },
@@ -28,7 +26,7 @@ public class VueClient extends JFrame {
     // Taille de chaque carte pizza
     private static final int CARD_W = 200;
     private static final int CARD_H = 230;
-    private static final int IMG_W  = 200;
+    private static final int IMG_W  = 180;
     private static final int IMG_H  = 130;
 
     // Couleurs de la charte

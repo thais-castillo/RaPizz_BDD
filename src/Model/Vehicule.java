@@ -1,3 +1,4 @@
+package Model;
 public class Vehicule {
     private int idVehicule;
     private String type;

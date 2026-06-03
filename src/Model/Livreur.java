@@ -1,3 +1,4 @@
+package Model;
 public class Livreur {
     private int idLivreur;
     private String nom;

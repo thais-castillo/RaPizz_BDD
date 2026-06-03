@@ -1,5 +1,10 @@
+package Vue;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import DAO.StatistiquesDAO;
+import Model.Statistiques;
+
 import java.awt.*;
 
 public class VueStatistiques extends JFrame {

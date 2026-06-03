@@ -1,5 +1,12 @@
+package Vue;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import Model.Client;
+import Model.Livreur;
+import Model.Pizza;
+import Model.Vehicule;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 

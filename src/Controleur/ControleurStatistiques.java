@@ -1,5 +1,9 @@
+package Controleur;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import Vue.VueMenu;
+import Vue.VueStatistiques;
 
 public class ControleurStatistiques {
     private final VueStatistiques vue;

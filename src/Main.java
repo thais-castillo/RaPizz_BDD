@@ -1,3 +1,6 @@
+import Controleur.ControleurMenu;
+import Vue.VueMenu;
+
 public class Main {
     public static void main(String[] args) {
         VueMenu vue = new VueMenu();
