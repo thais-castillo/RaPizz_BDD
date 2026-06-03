@@ -1,4 +1,5 @@
 package Vue;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,15 +10,16 @@ import java.awt.*;
 
 public class VueStatistiques extends JFrame {
 
+    // Palette de couleurs unifiée harmonisée avec le reste de l'appli (Thème Clair)
     private static final Color ROUGE = new Color(180, 30, 30);
-    private static final Color BEIGE_FOND = new Color(22, 22, 24);
-    private static final Color SURFACE = new Color(31, 31, 35);
-    private static final Color SURFACE_ALT = new Color(39, 39, 44);
-    private static final Color SURFACE_SOFT = new Color(45, 45, 52);
-    private static final Color VERT = new Color(0, 160, 110);
-    private static final Color TEXTE = new Color(245, 245, 245);
-    private static final Color TEXTE_MUTED = new Color(175, 175, 180);
-    private static final Color BORDER = new Color(62, 62, 70);
+    private static final Color BEIGE_FOND = new Color(255, 248, 235); // Fond clair de l'application
+    private static final Color SURFACE = Color.WHITE;                  // Cartes blanches épurées
+    private static final Color SURFACE_ALT = Color.WHITE;              // Cartes blanches épurées
+    private static final Color SURFACE_SOFT = new Color(245, 235, 220);// Boutons secondaires
+    private static final Color VERT = new Color(0, 140, 90);           // Vert lisible sur fond blanc
+    private static final Color TEXTE = new Color(45, 35, 25);          // Texte principal sombre
+    private static final Color TEXTE_MUTED = new Color(110, 100, 90);  // Texte secondaire atténué
+    private static final Color BORDER = new Color(220, 210, 195);      // Bordures légères de séparation
     private final Statistiques stats;
 
     private JButton btnRetour;
@@ -29,7 +31,6 @@ public class VueStatistiques extends JFrame {
         this.stats = stats;
         setTitle("RaPizz — Statistiques");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         // Boutons de sélection affichés au centre (écran d'entrée)
         JButton btnClients = new JButton("Clients");
@@ -50,33 +51,17 @@ public class VueStatistiques extends JFrame {
         root.add(buildFooter(), BorderLayout.SOUTH);
 
         add(root);
-        setLocationRelativeTo(null);
+        
+        // Ajustements pour l'affichage plein écran stable
+        setSize(1280, 800);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        root.revalidate();
+        root.repaint();
         setVisible(true);
-
-        // Diagnostics de visibilité pour debug
-        System.out.println("[VueStatistiques] visible=" + isVisible() + ", showing=" + isShowing() + ", bounds=" + getBounds());
-
-        // Si la taille est nulle (par ex. problème multi-écran), forcer une taille par défaut
-        if (getWidth() <= 0 || getHeight() <= 0) {
-            System.out.println("[VueStatistiques] taille invalide détectée, application d'une taille de secours.");
-            setSize(1200, 800);
-            setLocationRelativeTo(null);
-        }
-
-        // Si la fenêtre est positionnée hors écran (coordonnées négatives), recentrer sur l'écran principal
-        if (getX() < 0 || getY() < 0) {
-            Rectangle screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
-            int cx = screen.x + Math.max(0, (screen.width - getWidth()) / 2);
-            int cy = screen.y + Math.max(0, (screen.height - getHeight()) / 2);
-            System.out.println("[VueStatistiques] fenêtre hors écran détectée, recentrage vers: " + cx + "," + cy);
-            setLocation(cx, cy);
-        }
 
         // S'assurer que la fenêtre apparaît devant les autres
         toFront();
         requestFocus();
-        setAlwaysOnTop(true);
-        setAlwaysOnTop(false);
 
         // Listeners : afficher les cartes/statistiques dans le même affichage
         btnClients.addActionListener(e -> showCategoryView("Clients"));
@@ -146,7 +131,7 @@ public class VueStatistiques extends JFrame {
         titre.setFont(new Font("SansSerif", Font.BOLD, 13));
         titre.setForeground(TEXTE);
 
-        JLabel valeur = new JLabel(stats.chiffreAffairesTotal);
+        JLabel valeur = new JLabel(stats.getChiffreAffairesTotal());
         valeur.setFont(new Font("SansSerif", Font.BOLD, 34));
         valeur.setForeground(VERT);
 
@@ -162,8 +147,8 @@ public class VueStatistiques extends JFrame {
 
         JLabel badge = new JLabel("STAT");
         badge.setOpaque(true);
-        badge.setBackground(new Color(80, 80, 92));
-        badge.setForeground(Color.WHITE);
+        badge.setBackground(new Color(210, 200, 185));
+        badge.setForeground(TEXTE);
         badge.setFont(new Font("SansSerif", Font.BOLD, 11));
         badge.setBorder(new EmptyBorder(8, 12, 8, 12));
 
@@ -192,7 +177,6 @@ public class VueStatistiques extends JFrame {
     private void showCategorySelection() {
         selectedCategory = null;
         contentCenter.removeAll();
-        // recréer les boutons
         JButton btnClients = new JButton("Clients");
         JButton btnLivraisons = new JButton("Livraisons");
         JButton btnLivreurs = new JButton("Livreurs");
@@ -234,68 +218,68 @@ public class VueStatistiques extends JFrame {
             JComponent clientsSection = buildClientsSection();
             return wrapScrollable(clientsSection);
         } else if ("Livraisons".equals(category)) {
-            cards.add(buildInsightCard("Total des commandes", stats.totalCommandes, "", "Nombre total de livraisons enregistrées."));
-            cards.add(buildInsightCard("Délai moyen", stats.delaiMoyen, "", "Temps moyen entre commande et livraison."));
-            cards.add(buildInsightCard("Livraison la plus rapide", stats.livraisonPlusRapide, "", "Livraison la plus courte relevée."));
-            cards.add(buildInsightCard("Jour le plus chargé", lireStatistique(() -> new StatistiquesDAO().lireJourPlusLivraisons(), "N/A"), "", "Date avec le plus de livraisons."));
+            cards.add(buildInsightCard("Total des commandes", stats.getTotalCommandes(), "", "Nombre total de livraisons enregistrées."));
+            cards.add(buildInsightCard("Délai moyen", stats.getDelaiMoyen(), "", "Temps moyen entre commande et livraison."));
+            cards.add(buildInsightCard("Livraison la plus rapide", stats.getLivraisonPlusRapide(), "", "Livraison la plus courte relevée."));
+            cards.add(buildInsightCard("Jour le plus chargé", stats.getJourPlusCharge(), "", "Date avec le plus de livraisons."));
         } else if ("Livreurs".equals(category)) {
-            cards.add(buildInsightCard("Meilleur livreur", stats.meilleurLivreur, "", "Livreur avec le plus de livraisons."));
+            cards.add(buildInsightCard("Meilleur livreur", stats.getMeilleurLivreur(), "", "Livreur avec le plus de livraisons."));
             cards.add(buildInsightCard("Pire livreur", premierPireLivreurNom(), premierPireLivreurRetards(), "Nombre de retards sur l'ensemble des livraisons."));
-            cards.add(buildInsightCard("Véhicule le plus utilisé", stats.vehiculePlusUtilise, "", "Véhicule le plus sollicité."));
-            cards.add(buildInsightCard("Véhicules jamais utilisés", lireStatistique(() -> new StatistiquesDAO().lireNombreVehiculesJamaisUtilises(), "0"), "", "Nombre de véhicules sans livraison."));
+            cards.add(buildInsightCard("Véhicule le plus utilisé", stats.getVehiculePlusUtilise(), "", "Véhicule le plus sollicité."));
+            cards.add(buildInsightCard("Véhicules jamais utilisés", stats.getVehiculesJamaisUtilises(), "", "Nombre de véhicules sans livraison."));
         } else {
-            cards.add(buildInsightCard("Pizza star", stats.pizzaStar, "", "Pizza la plus commandée."));
-            cards.add(buildInsightCard("Pizza la moins commandée", lireStatistique(() -> new StatistiquesDAO().lirePizzaMoinsCommandee(), "N/A"), "", "Pizza la moins servie."));
-            cards.add(buildInsightCard("Ingrédient favori", stats.ingredientFavori, "", "Ingrédient le plus utilisé."));
-            cards.add(buildInsightCard("Pizzas au menu", lireStatistique(() -> Integer.toString(new StatistiquesDAO().getMenu().size()), "0"), "", "Nombre de pizzas disponibles à la carte."));
+            cards.add(buildInsightCard("Pizza star", stats.getPizzaStar(), "", "Pizza la plus commandée."));
+            cards.add(buildInsightCard("Pizza la moins commandée", stats.getPizzaMoinsCommandee(), "", "Pizza la moins servie."));
+            cards.add(buildInsightCard("Ingrédient favori", stats.getIngredientFavori(), "", "Ingrédient le plus utilisé."));
+            cards.add(buildInsightCard("Pizzas au menu", stats.getNombrePizzasMenu(), "", "Nombre de pizzas disponibles à la carte."));
         }
 
         return wrapScrollable(cards);
     }
 
     private JComponent buildClientsSection() {
-    JPanel container = new JPanel();
-    container.setOpaque(false);
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        JPanel container = new JPanel();
+        container.setOpaque(false);
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-    JPanel cards = new JPanel(new GridLayout(2, 2, 18, 18));
-    cards.setOpaque(false);
-    cards.add(buildInsightCard("Meilleur client", stats.meilleurClient, "", "Client avec le plus de commandes."));
-    cards.add(buildInsightCard("Moyenne commandes", lireStatistique(() -> new StatistiquesDAO().lireMoyenneCommandes(), "0,00"), "", "Moyenne de commandes par client."));
-    cards.add(buildInsightCard("Clients au-dessus de la moyenne", lireStatistique(() -> new StatistiquesDAO().lireNombreClientsAuDessusMoyenne(), "0"), "", "Nombre de clients ayant dépassé la moyenne."));
-    cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client generant le plus de chiffre d'affaires."));
+        JPanel cards = new JPanel(new GridLayout(2, 2, 18, 18));
+        cards.setOpaque(false);
+        cards.add(buildInsightCard("Meilleur client", stats.getMeilleurClient(), "", "Client avec le plus de commandes."));
+        cards.add(buildInsightCard("Moyenne commandes", stats.getMoyenneCommandes(), "", "Moyenne de commandes par client."));
+        cards.add(buildInsightCard("Clients au-dessus de la moyenne", stats.getClientsAuDessusMoyenne(), "", "Nombre de clients ayant dépassé la moyenne."));
+        cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client générant le plus de chiffre d'affaires."));
 
-    container.add(cards);
-    container.add(Box.createVerticalStrut(18));
+        container.add(cards);
+        container.add(Box.createVerticalStrut(18));
 
-    JLabel titre = new JLabel("Commandes par client");
-    titre.setFont(new Font("SansSerif", Font.BOLD, 18));
-    titre.setForeground(TEXTE);
-    titre.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel titre = new JLabel("Commandes par client");
+        titre.setFont(new Font("SansSerif", Font.BOLD, 18));
+        titre.setForeground(TEXTE);
+        titre.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    JLabel sous = new JLabel("Nombre total de commandes par client");
-    sous.setFont(new Font("SansSerif", Font.PLAIN, 12));
-    sous.setForeground(TEXTE_MUTED);
-    sous.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel sous = new JLabel("Nombre total de commandes par client");
+        sous.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        sous.setForeground(TEXTE_MUTED);
+        sous.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    container.add(titre);
-    container.add(Box.createVerticalStrut(4));
-    container.add(sous);
-    container.add(Box.createVerticalStrut(10));
+        container.add(titre);
+        container.add(Box.createVerticalStrut(4));
+        container.add(sous);
+        container.add(Box.createVerticalStrut(10));
 
-    String[] cols = {"Prenom", "Nom", "#Commandes"};
-    java.util.List<String[]> rows = lireClientsCommandes();
-    JScrollPane tablePanel = buildTablePanel(cols, rows);
-    
-    // Crucial pour le BoxLayout : alignement pour forcer l'étirement horizontal
-    tablePanel.setAlignmentX(Component.LEFT_ALIGNMENT); 
-    container.add(tablePanel);
+        String[] cols = {"Prénom", "Nom", "#Commandes"};
+        java.util.List<String[]> rows = lireClientsCommandes();
+        JScrollPane tablePanel = buildTablePanel(cols, rows);
+        
+        tablePanel.setAlignmentX(Component.LEFT_ALIGNMENT); 
+        container.add(tablePanel);
 
-    return container;
-}
+        return container;
+    }
+
     private java.util.List<String[]> lireClientsCommandes() {
         try {
-            return new StatistiquesDAO().getClientsCommandes();
+            return new StatistiquesDAO().getChiffreAffaireParClient();
         } catch (Exception ex) {
             ex.printStackTrace();
             return new java.util.ArrayList<>();
@@ -303,51 +287,47 @@ public class VueStatistiques extends JFrame {
     }
 
     private JScrollPane buildTablePanel(String[] columns, java.util.List<String[]> rows) {
-    DefaultTableModel model = new DefaultTableModel(columns, 0) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
-        }
-    };
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-    if (rows != null) {
-        for (String[] r : rows) {
-            model.addRow(r);
+        if (rows != null) {
+            for (String[] r : rows) {
+                model.addRow(r);
+            }
         }
+
+        JTable table = new JTable(model);
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(26);
+        table.setBackground(SURFACE_ALT);
+        table.setForeground(TEXTE);
+        table.setGridColor(BORDER);
+        table.setSelectionBackground(SURFACE_SOFT);
+        table.setSelectionForeground(TEXTE);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(SURFACE);
+        header.setForeground(TEXTE);
+        header.setFont(new Font("SansSerif", Font.BOLD, 12));
+
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBorder(BorderFactory.createCompoundBorder(
+            new LineBorder(BORDER, 1, true),
+            new EmptyBorder(8, 8, 8, 8)
+        ));
+        scroll.setBackground(BEIGE_FOND);
+        scroll.getViewport().setBackground(SURFACE_ALT);
+        
+        scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width, 400));
+        scroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
+        
+        return scroll;
     }
-
-    JTable table = new JTable(model);
-    table.setFillsViewportHeight(true);
-    table.setRowHeight(26);
-    table.setBackground(SURFACE_ALT);
-    table.setForeground(TEXTE);
-    table.setGridColor(BORDER);
-    table.setSelectionBackground(SURFACE_SOFT);
-    table.setSelectionForeground(TEXTE);
-
-    // Force les colonnes à se partager équitablement toute la largeur de la table
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-    JTableHeader header = table.getTableHeader();
-    header.setBackground(SURFACE);
-    header.setForeground(TEXTE);
-    header.setFont(new Font("SansSerif", Font.BOLD, 12));
-
-    JScrollPane scroll = new JScrollPane(table);
-    scroll.setBorder(BorderFactory.createCompoundBorder(
-        new LineBorder(BORDER, 1, true),
-        new EmptyBorder(8, 8, 8, 8)
-    ));
-    scroll.setBackground(BEIGE_FOND);
-    scroll.getViewport().setBackground(SURFACE_ALT);
-    
-    // CHANGEMENT ICI : On ne restreint plus la largeur à 720
-    scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width, 400));
-    // On autorise le BoxLayout à étirer le composant autant que possible en largeur (Integer.MAX_VALUE)
-    scroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
-    
-    return scroll;
-}
 
     private JScrollPane wrapScrollable(JComponent content) {
         JScrollPane scroll = new JScrollPane(content);
@@ -361,69 +341,20 @@ public class VueStatistiques extends JFrame {
     }
 
     private String premierClientCA() {
-        try {
-            java.util.List<String[]> rows = new StatistiquesDAO().getChiffreAffaireParClient();
-            if (!rows.isEmpty() && rows.get(0).length >= 3) {
-                String[] row = rows.get(0);
-                return row[0] + " " + row[1] + " — " + row[2];
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return "N/A";
+        return stats.getClientMeilleurCA();
     }
 
     private String premierPireLivreurNom() {
-        try {
-            java.util.List<String[]> rows = new StatistiquesDAO().getPireLivreur();
-            if (!rows.isEmpty() && rows.get(0).length >= 3) {
-                String[] row = rows.get(0);
-                return row[0] + " " + row[1];
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return "N/A";
+        return stats.getPireLivreurNom();
     }
 
     private String premierPireLivreurRetards() {
-        try {
-            java.util.List<String[]> rows = new StatistiquesDAO().getPireLivreur();
-            if (!rows.isEmpty() && rows.get(0).length >= 3) {
-                return rows.get(0)[2] + " retards";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return "0 retards";
-    }
-
-    private String lireStatistique(StatistiqueFournisseur fournisseur, String defaut) {
-        try {
-            return fournisseur.lire();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return defaut;
-        }
-    }
-
-    private interface StatistiqueFournisseur {
-        String lire() throws Exception;
-    }
-
-    // extrait la ligne des KPI pour réutilisation dans showCardsView
-    private JPanel buildKpiRow() {
-        JPanel kpis = new JPanel(new GridLayout(1, 3, 18, 18));
-        kpis.setOpaque(false);
-        kpis.add(buildKpiCard("Chiffre d'affaires", stats.chiffreAffairesTotal, "Total encaissé sur toutes les livraisons", VERT));
-        kpis.add(buildKpiCard("Commandes", stats.totalCommandes, "Nombre total de livraisons enregistrées", ROUGE));
-        kpis.add(buildKpiCard("Délai moyen", stats.delaiMoyen, "Temps moyen observé entre commande et livraison", new Color(35, 90, 160)));
-        return kpis;
+        return stats.getPireLivreurRetards();
     }
 
     private JPanel buildHeader() {
         JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(new Color(24, 24, 28));
+        header.setBackground(ROUGE);
         header.setBorder(new EmptyBorder(22, 30, 22, 30));
 
         JPanel texts = new JPanel();
@@ -436,7 +367,7 @@ public class VueStatistiques extends JFrame {
 
         JLabel sousTitre = new JLabel("Synthèse des indicateurs clés issus de la base de données");
         sousTitre.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        sousTitre.setForeground(TEXTE_MUTED);
+        sousTitre.setForeground(new Color(255, 230, 220));
 
         texts.add(titre);
         texts.add(sousTitre);
@@ -445,41 +376,9 @@ public class VueStatistiques extends JFrame {
         return header;
     }
 
-    private JPanel buildCenter() {
-        JPanel center = new JPanel(new BorderLayout(0, 18));
-        center.setBackground(BEIGE_FOND);
-        center.setBorder(new EmptyBorder(24, 24, 24, 24));
-
-        JPanel kpis = new JPanel(new GridLayout(1, 3, 18, 18));
-        kpis.setOpaque(false);
-       kpis.add(buildKpiCard("Chiffre d'affaires", stats.chiffreAffairesTotal, "Total encaissé sur toutes les livraisons", VERT));
-        kpis.add(buildKpiCard("Commandes", stats.totalCommandes, "Nombre total de livraisons enregistrées", ROUGE));
-        kpis.add(buildKpiCard("Délai moyen", stats.delaiMoyen, "Temps moyen observé entre commande et livraison", new Color(35, 90, 160)));
-
-        JPanel cards = new JPanel(new GridLayout(2, 3, 18, 18));
-        cards.setOpaque(false);
-        cards.add(buildInsightCard("Meilleur client", stats.meilleurClient, "", "Client le plus fidèle selon la requête statistique."));
-        cards.add(buildInsightCard("Meilleur livreur", stats.meilleurLivreur, "", "Livreur ayant réalisé le plus de livraisons."));
-        cards.add(buildInsightCard("Véhicule le plus utilisé", stats.vehiculePlusUtilise, "", "Véhicule associé au plus grand nombre de livraisons."));
-        cards.add(buildInsightCard("Pizza star", stats.pizzaStar, "", "Pizza la plus commandée sur la période."));
-        cards.add(buildInsightCard("Livraison la plus rapide", stats.livraisonPlusRapide, "", "Livraison la plus courte relevée dans l'historique."));
-        cards.add(buildInsightCard("Ingrédient favori", stats.ingredientFavori, "", "Ingrédient qui revient le plus souvent dans les recettes."));
-
-        JScrollPane scroll = new JScrollPane(cards);
-        scroll.setBorder(null);
-        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.getVerticalScrollBar().setUnitIncrement(16);
-        scroll.setBackground(BEIGE_FOND);
-        scroll.getViewport().setBackground(BEIGE_FOND);
-
-        center.add(kpis, BorderLayout.NORTH);
-        center.add(scroll, BorderLayout.CENTER);
-        return center;
-    }
-
     private JPanel buildFooter() {
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 12));
-        footer.setBackground(new Color(24, 24, 28));
+        footer.setBackground(new Color(245, 235, 220));
         footer.setBorder(new MatteBorder(1, 0, 0, 0, BORDER));
 
         btnRetour = new JButton("← Retour au menu");
@@ -487,38 +386,6 @@ public class VueStatistiques extends JFrame {
 
         footer.add(btnRetour);
         return footer;
-    }
-
-    private JPanel buildKpiCard(String titre, String valeur, String description, Color accent) {
-        JPanel card = new JPanel();
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(SURFACE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-            new LineBorder(BORDER, 1, true),
-            new EmptyBorder(18, 18, 18, 18)
-        ));
-
-        JLabel lblTitre = new JLabel(titre.toUpperCase());
-        lblTitre.setFont(new Font("SansSerif", Font.BOLD, 12));
-        lblTitre.setForeground(TEXTE_MUTED);
-        lblTitre.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel lblValeur = new JLabel(valeur);
-        lblValeur.setFont(new Font("SansSerif", Font.BOLD, 30));
-        lblValeur.setForeground(accent);
-        lblValeur.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel lblDesc = new JLabel("<html><body style='width: 100%'>" + description + "</body></html>");
-        lblDesc.setFont(new Font("SansSerif", Font.PLAIN, 13));
-        lblDesc.setForeground(TEXTE);
-        lblDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        card.add(lblTitre);
-        card.add(Box.createVerticalStrut(8));
-        card.add(lblValeur);
-        card.add(Box.createVerticalStrut(6));
-        card.add(lblDesc);
-        return card;
     }
 
     private JPanel buildInsightCard(String titre, String valeur, String sousValeur, String description) {
@@ -583,7 +450,7 @@ public class VueStatistiques extends JFrame {
     private void styleCategoryButton(JButton button, Color accent, Dimension size) {
         button.setFont(new Font("SansSerif", Font.BOLD, 20));
         button.setForeground(Color.WHITE);
-        button.setBackground(accent.darker());
+        button.setBackground(accent);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

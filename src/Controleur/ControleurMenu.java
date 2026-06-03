@@ -12,6 +12,7 @@ import Vue.VueMenu;
 import Vue.VueStatistiques;
 import Vue.VueSuiviLivraisons;
 import Vue.VueVente;
+import javax.swing.JOptionPane;
 
 public class ControleurMenu {
     private VueMenu vue;
@@ -63,22 +64,33 @@ public class ControleurMenu {
         public void actionPerformed(ActionEvent e) {
             System.out.println("[Controleur] Clic détecté sur Stats — tentative d'ouverture.");
             try {
-                // Récupération des statistiques depuis la base
+                // 1. Récupération des statistiques depuis la base
                 StatistiquesDAO dao = new StatistiquesDAO();
                 Statistiques stats = dao.chargerStatistiques();
 
+                // 2. Création de la vue et de son contrôleur
                 VueStatistiques vueStats = new VueStatistiques(stats);
                 new ControleurStatistiques(vueStats);
 
-                System.out.println("[Controleur] VueStatistiques créée avec succès.");
-            } catch (Throwable ex) {
-                System.err.println("[Controleur] Erreur lors de l'ouverture de la page statistiques : ");
-                ex.printStackTrace();
-            }
+                // 3. Rendre la nouvelle vue VISIBLE (Ligne indispensable !)
+                vueStats.setVisible(true);
 
-            // fermer le menu après ouverture
-            System.out.println("[Controleur] Fermeture du menu principal.");
-            vue.dispose();
+                System.out.println("[Controleur] VueStatistiques créée et affichée avec succès.");
+                
+                // 4. Fermer le menu principal seulement si la création a réussi
+                System.out.println("[Controleur] Fermeture du menu principal.");
+                vue.dispose();
+
+            } catch (Throwable ex) {
+                System.err.println("[Controleur] Erreur critique lors de l'ouverture de la page statistiques : ");
+                ex.printStackTrace();
+                
+                // Optionnel : Alerter l'utilisateur plutôt que de laisser un écran figé
+                JOptionPane.showMessageDialog(vue, 
+                    "Impossible de charger les statistiques.\nVérifiez la console ou l'état de la base de données.", 
+                    "Erreur de chargement", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
