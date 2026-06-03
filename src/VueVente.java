@@ -91,9 +91,17 @@ public class VueVente extends JFrame {
         addFormRow(formCard, gbc, "Livreur désigné :", cbLivreurs, 3);
         addFormRow(formCard, gbc, "Véhicule utilisé :", cbVehicules, 4);
 
-        // Bouton de validation de commande intégré directement au bas de la carte
+        // Info procédure + trigger (règle automatique)
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        gbc.insets = new Insets(25, 15, 0, 15);
+        gbc.insets = new Insets(6, 15, 0, 15);
+        JLabel infoSql = new JLabel("<html><body>Insertion via procedure stockee, fidelite et retard geres par la base.</body></html>");
+        infoSql.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        infoSql.setForeground(TEXTE_MUTED);
+        formCard.add(infoSql, gbc);
+
+        // Bouton de validation de commande intégré directement au bas de la carte
+        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        gbc.insets = new Insets(18, 15, 0, 15);
         btnValider = new JButton("Valider et enregistrer la livraison");
         btnValider.setFont(new Font("SansSerif", Font.BOLD, 15));
         btnValider.setBackground(VERT);

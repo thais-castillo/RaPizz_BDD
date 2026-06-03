@@ -1,5 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class VueStatistiques extends JFrame {
@@ -226,10 +228,8 @@ public class VueStatistiques extends JFrame {
         cards.setOpaque(false);
 
         if ("Clients".equals(category)) {
-            cards.add(buildInsightCard("Meilleur client", stats.meilleurClient, "", "Client avec le plus de commandes."));
-            cards.add(buildInsightCard("Moyenne commandes", lireStatistique(() -> new StatistiquesDAO().lireMoyenneCommandes(), "0,00"), "", "Moyenne de commandes par client."));
-            cards.add(buildInsightCard("Clients au-dessus de la moyenne", lireStatistique(() -> new StatistiquesDAO().lireNombreClientsAuDessusMoyenne(), "0"), "", "Nombre de clients ayant dépassé la moyenne."));
-            cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client générant le plus de chiffre d'affaires."));
+            JComponent clientsSection = buildClientsSection();
+            return wrapScrollable(clientsSection);
         } else if ("Livraisons".equals(category)) {
             cards.add(buildInsightCard("Total des commandes", stats.totalCommandes, "", "Nombre total de livraisons enregistrées."));
             cards.add(buildInsightCard("Délai moyen", stats.delaiMoyen, "", "Temps moyen entre commande et livraison."));
@@ -247,7 +247,107 @@ public class VueStatistiques extends JFrame {
             cards.add(buildInsightCard("Pizzas au menu", lireStatistique(() -> Integer.toString(new StatistiquesDAO().getMenu().size()), "0"), "", "Nombre de pizzas disponibles à la carte."));
         }
 
-        JScrollPane scroll = new JScrollPane(cards);
+        return wrapScrollable(cards);
+    }
+
+    private JComponent buildClientsSection() {
+    JPanel container = new JPanel();
+    container.setOpaque(false);
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
+    JPanel cards = new JPanel(new GridLayout(2, 2, 18, 18));
+    cards.setOpaque(false);
+    cards.add(buildInsightCard("Meilleur client", stats.meilleurClient, "", "Client avec le plus de commandes."));
+    cards.add(buildInsightCard("Moyenne commandes", lireStatistique(() -> new StatistiquesDAO().lireMoyenneCommandes(), "0,00"), "", "Moyenne de commandes par client."));
+    cards.add(buildInsightCard("Clients au-dessus de la moyenne", lireStatistique(() -> new StatistiquesDAO().lireNombreClientsAuDessusMoyenne(), "0"), "", "Nombre de clients ayant dépassé la moyenne."));
+    cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client generant le plus de chiffre d'affaires."));
+
+    container.add(cards);
+    container.add(Box.createVerticalStrut(18));
+
+    JLabel titre = new JLabel("Commandes par client");
+    titre.setFont(new Font("SansSerif", Font.BOLD, 18));
+    titre.setForeground(TEXTE);
+    titre.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    JLabel sous = new JLabel("Nombre total de commandes par client");
+    sous.setFont(new Font("SansSerif", Font.PLAIN, 12));
+    sous.setForeground(TEXTE_MUTED);
+    sous.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+    container.add(titre);
+    container.add(Box.createVerticalStrut(4));
+    container.add(sous);
+    container.add(Box.createVerticalStrut(10));
+
+    String[] cols = {"Prenom", "Nom", "#Commandes"};
+    java.util.List<String[]> rows = lireClientsCommandes();
+    JScrollPane tablePanel = buildTablePanel(cols, rows);
+    
+    // Crucial pour le BoxLayout : alignement pour forcer l'étirement horizontal
+    tablePanel.setAlignmentX(Component.LEFT_ALIGNMENT); 
+    container.add(tablePanel);
+
+    return container;
+}
+    private java.util.List<String[]> lireClientsCommandes() {
+        try {
+            return new StatistiquesDAO().getClientsCommandes();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    private JScrollPane buildTablePanel(String[] columns, java.util.List<String[]> rows) {
+    DefaultTableModel model = new DefaultTableModel(columns, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    if (rows != null) {
+        for (String[] r : rows) {
+            model.addRow(r);
+        }
+    }
+
+    JTable table = new JTable(model);
+    table.setFillsViewportHeight(true);
+    table.setRowHeight(26);
+    table.setBackground(SURFACE_ALT);
+    table.setForeground(TEXTE);
+    table.setGridColor(BORDER);
+    table.setSelectionBackground(SURFACE_SOFT);
+    table.setSelectionForeground(TEXTE);
+
+    // Force les colonnes à se partager équitablement toute la largeur de la table
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+    JTableHeader header = table.getTableHeader();
+    header.setBackground(SURFACE);
+    header.setForeground(TEXTE);
+    header.setFont(new Font("SansSerif", Font.BOLD, 12));
+
+    JScrollPane scroll = new JScrollPane(table);
+    scroll.setBorder(BorderFactory.createCompoundBorder(
+        new LineBorder(BORDER, 1, true),
+        new EmptyBorder(8, 8, 8, 8)
+    ));
+    scroll.setBackground(BEIGE_FOND);
+    scroll.getViewport().setBackground(SURFACE_ALT);
+    
+    // CHANGEMENT ICI : On ne restreint plus la largeur à 720
+    scroll.setPreferredSize(new Dimension(scroll.getPreferredSize().width, 400));
+    // On autorise le BoxLayout à étirer le composant autant que possible en largeur (Integer.MAX_VALUE)
+    scroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
+    
+    return scroll;
+}
+
+    private JScrollPane wrapScrollable(JComponent content) {
+        JScrollPane scroll = new JScrollPane(content);
         scroll.setBorder(null);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
