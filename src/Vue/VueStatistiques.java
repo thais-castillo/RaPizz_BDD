@@ -1,7 +1,10 @@
+package Vue;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import DAO.StatistiquesDAO;
+import Model.Statistiques;
 import java.awt.*;
 
 public class VueStatistiques extends JFrame {

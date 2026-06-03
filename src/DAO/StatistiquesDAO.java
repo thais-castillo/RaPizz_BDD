@@ -1,7 +1,11 @@
+package DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import Model.BaseDeDonnee;
+import Model.Statistiques;
 
 public class StatistiquesDAO {
 

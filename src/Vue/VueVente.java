@@ -1,7 +1,17 @@
+package Vue;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import Model.Client;
+import Model.Livreur;
+import Model.Pizza;
+import Model.Vehicule;
+
 import java.awt.*;
+import java.awt.Desktop;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 public class VueVente extends JFrame {
     private JComboBox<Client> cbClients;
@@ -11,6 +21,7 @@ public class VueVente extends JFrame {
     private JComboBox<Vehicule> cbVehicules;
     private JButton btnValider;
     private JButton btnRetour;
+    private JButton btnCatalogue;
 
     private static final Color ROUGE = new Color(180, 30, 30);
     private static final Color BEIGE_FOND = new Color(255, 248, 235);
@@ -56,6 +67,7 @@ public class VueVente extends JFrame {
         texts.add(sousTitre);
 
         header.add(texts, BorderLayout.WEST);
+
         return header;
     }
 
@@ -113,6 +125,25 @@ public class VueVente extends JFrame {
         formCard.add(btnValider, gbc);
 
         center.add(formCard);
+
+        // Bouton catalogue place sous la carte formulaire
+        GridBagConstraints gbcCat = new GridBagConstraints();
+        gbcCat.gridy = 1;
+        gbcCat.insets = new Insets(18, 0, 0, 0);
+
+        btnCatalogue = new JButton("Consulter le catalogue de la pizzeria");
+        btnCatalogue.setFont(new Font("SansSerif", Font.BOLD, 13));
+        btnCatalogue.setBackground(Color.WHITE);
+        btnCatalogue.setForeground(ROUGE);
+        btnCatalogue.setFocusPainted(false);
+        btnCatalogue.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnCatalogue.setBorder(BorderFactory.createCompoundBorder(
+            new LineBorder(ROUGE, 1, true),
+            new EmptyBorder(10, 24, 10, 24)
+        ));
+        btnCatalogue.addActionListener(e -> ouvrirCataloguePDF());
+        center.add(btnCatalogue, gbcCat);
+
         return center;
     }
 
@@ -156,6 +187,35 @@ public class VueVente extends JFrame {
 
     public void addValiderListener(ActionListener listener) { btnValider.addActionListener(listener); }
     public void addRetourListener(ActionListener listener) { btnRetour.addActionListener(listener); }
+
+    /**
+     * Ouvre le catalogue PDF de la pizzeria avec le lecteur PDF par défaut du système.
+     */
+    private void ouvrirCataloguePDF() {
+        File pdf = new File("src/assets/catalogue_rapizz.pdf");
+        if (!pdf.exists()) {
+            JOptionPane.showMessageDialog(this,
+                "Le fichier catalogue est introuvable.\n(" + pdf.getAbsolutePath() + ")",
+                "Catalogue non trouvé",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            JOptionPane.showMessageDialog(this,
+                "Impossible d'ouvrir le PDF automatiquement sur ce système.",
+                "Non supporté",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            Desktop.getDesktop().open(pdf);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                "Erreur lors de l'ouverture du catalogue : " + ex.getMessage(),
+                "Erreur",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public JComboBox<Client> getCbClients() { return cbClients; }
     public JComboBox<Pizza> getCbPizzas() { return cbPizzas; }

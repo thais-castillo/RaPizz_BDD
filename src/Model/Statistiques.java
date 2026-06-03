@@ -1,3 +1,4 @@
+package Model;
 public class Statistiques {
     public final String chiffreAffairesTotal;
     public final String meilleurClient;

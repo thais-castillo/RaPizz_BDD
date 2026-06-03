@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/LivraisonDAO.java
 import java.sql.CallableStatement;
+=======
+package DAO;
+>>>>>>> 886463daec4817e8c4d346eb74a303bdbd87ba16:src/DAO/LivraisonDAO.java
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +12,8 @@ import java.sql.Time;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import Model.BaseDeDonnee;
 
 public class LivraisonDAO {
 

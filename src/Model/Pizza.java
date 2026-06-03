@@ -1,3 +1,4 @@
+package Model;
 public class Pizza {
     private int idPizza;
     private String nom;
