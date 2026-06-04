@@ -242,6 +242,7 @@ public class VueStatistiques extends JFrame {
         container.setOpaque(false);
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
+        // 1. Grille supérieure contenant les 4 cartes
         JPanel cards = new JPanel(new GridLayout(2, 2, 18, 18));
         cards.setOpaque(false);
         cards.add(buildInsightCard("Meilleur client", stats.getMeilleurClient(), "", "Client avec le plus de commandes."));
@@ -250,8 +251,9 @@ public class VueStatistiques extends JFrame {
         cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client générant le plus de chiffre d'affaires."));
 
         container.add(cards);
-        container.add(Box.createVerticalStrut(18));
+        container.add(Box.createVerticalStrut(24)); // Un peu plus d'espace sous les cartes
 
+        // 2. Zone des titres textuels
         JLabel titre = new JLabel("Commandes par client");
         titre.setFont(new Font("SansSerif", Font.BOLD, 18));
         titre.setForeground(TEXTE);
@@ -265,14 +267,20 @@ public class VueStatistiques extends JFrame {
         container.add(titre);
         container.add(Box.createVerticalStrut(4));
         container.add(sous);
-        container.add(Box.createVerticalStrut(10));
+        container.add(Box.createVerticalStrut(14));
+
+        // 3. CORRECTION : Encapsulation dans un wrapper en BorderLayout
+        // Cela force le JScrollPane à se déployer sur toute la largeur disponible
+        JPanel tableWrapper = new JPanel(new BorderLayout());
+        tableWrapper.setOpaque(false);
+        tableWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         String[] cols = {"Prénom", "Nom", "#Commandes"};
         java.util.List<String[]> rows = lireClientsCommandes();
         JScrollPane tablePanel = buildTablePanel(cols, rows);
         
-        tablePanel.setAlignmentX(Component.LEFT_ALIGNMENT); 
-        container.add(tablePanel);
+        tableWrapper.add(tablePanel, BorderLayout.CENTER);
+        container.add(tableWrapper);
 
         return container;
     }

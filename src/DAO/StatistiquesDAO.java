@@ -333,18 +333,17 @@ public class StatistiquesDAO {
         return getMenu(cnx);
     }
 
-    // CORRECTION 2 : Retrait du "LIMIT 1" pour obtenir TOUS les clients ordonnés par CA décroissant
     public List<String[]> getChiffreAffaireParClient() throws SQLException {
         Connection cnx = BaseDeDonnee.getInstance().getDatabase();
         if (cnx == null) return new java.util.ArrayList<>();
         
-        String sql = "SELECT c.nom, c.prenom, " +
-                    "SUM(CASE WHEN l.gratuit = TRUE THEN 0 ELSE l.prix_pizza END) AS chiffre_affaire_client " +
-                    "FROM Client c JOIN Livraison l ON c.Id_Client = l.Id_Client " +
+        String sql = "SELECT c.prenom, c.nom, COUNT(l.Id_Livraison) AS nombre_commandes " +
+                    "FROM Client c " +
+                    "JOIN Livraison l ON c.Id_Client = l.Id_Client " +
                     "GROUP BY c.Id_Client, c.nom, c.prenom " +
-                    "ORDER BY chiffre_affaire_client DESC, c.nom ASC"; // LIMIT 1 ENLEVÉ ICI !
+                    "ORDER BY nombre_commandes DESC, c.nom ASC";
         
-        String[] cols = {"nom", "prenom", "chiffre_affaire_client"};
+        String[] cols = {"prenom", "nom", "nombre_commandes"};
         return fetchRows(cnx, sql, cols);
     }
 
