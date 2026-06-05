@@ -11,7 +11,7 @@ public class BaseDeDonnee {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
             this.cnx = DriverManager.getConnection("jdbc:mariadb://dwarves.iut-fbleau.fr/bribant", "bribant", "Chocolat");
-            System.out.println("[BDD] Connexion réussie à dwarves !");
+            System.out.println("Connexion réussie à la base de données !");
         } catch (ClassNotFoundException e) {
             System.err.println("Mauvais classpath : le driver MariaDB est manquant.");
         } catch (SQLException e) {

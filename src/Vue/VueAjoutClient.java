@@ -7,19 +7,15 @@ import java.awt.event.ActionListener;
 
 public class VueAjoutClient extends JFrame {
 
-    // ── Champs du formulaire ──────────────────────────────────────────────────
     private JTextField txtNom;
     private JTextField txtPrenom;
     private JTextField txtSolde;
 
-    // ── Boutons d'action ──────────────────────────────────────────────────────
     private JButton btnValider;
     private JButton btnAnnuler;
 
-    // ── Zone de retour utilisateur ────────────────────────────────────────────
     private JLabel lblMessage;
 
-    // ── Palette graphique (identique à VueMenu) ───────────────────────────────
     private static final Color ROUGE       = new Color(180, 30, 30);
     private static final Color BEIGE_FOND  = new Color(255, 248, 235);
     private static final Color VIOLET      = new Color(130, 60, 160);
@@ -44,7 +40,6 @@ public class VueAjoutClient extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // ── Header ────────────────────────────────────────────────────────────────
     private JPanel buildHeader() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(VIOLET);
@@ -70,7 +65,6 @@ public class VueAjoutClient extends JFrame {
         return header;
     }
 
-    // ── Formulaire ────────────────────────────────────────────────────────────
     private JPanel buildForm() {
         JPanel wrapper = new JPanel(new GridBagLayout());
         wrapper.setBackground(BEIGE_FOND);
@@ -84,7 +78,6 @@ public class VueAjoutClient extends JFrame {
             new EmptyBorder(30, 40, 30, 40)
         ));
 
-        // Section label
         JLabel lblSection = new JLabel("INFORMATIONS DU CLIENT");
         lblSection.setFont(new Font("SansSerif", Font.BOLD, 11));
         lblSection.setForeground(TEXTE_MUTED);
@@ -92,7 +85,6 @@ public class VueAjoutClient extends JFrame {
         card.add(lblSection);
         card.add(Box.createVerticalStrut(20));
 
-        // Champs
         txtNom    = addField(card, "Nom *",    "Ex : Dupont");
         card.add(Box.createVerticalStrut(15));
         txtPrenom = addField(card, "Prénom *", "Ex : Marie");
@@ -100,7 +92,6 @@ public class VueAjoutClient extends JFrame {
         txtSolde  = addField(card, "Solde initial (€) *", "Ex : 20.00");
         card.add(Box.createVerticalStrut(8));
 
-        // Note informative
         JLabel note = new JLabel("La date d'abonnement sera définie à aujourd'hui et la bonification à 0.");
         note.setFont(new Font("SansSerif", Font.ITALIC, 11));
         note.setForeground(TEXTE_MUTED);
@@ -108,7 +99,6 @@ public class VueAjoutClient extends JFrame {
         card.add(note);
         card.add(Box.createVerticalStrut(20));
 
-        // Message de retour
         lblMessage = new JLabel(" ");
         lblMessage.setFont(new Font("SansSerif", Font.BOLD, 13));
         lblMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -118,7 +108,6 @@ public class VueAjoutClient extends JFrame {
         return wrapper;
     }
 
-    /** Crée un bloc label + champ de saisie aligné à gauche. */
     private JTextField addField(JPanel parent, String label, String placeholder) {
         JLabel lbl = new JLabel(label);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -135,7 +124,6 @@ public class VueAjoutClient extends JFrame {
         ));
         field.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Placeholder simulé
         field.setForeground(Color.GRAY);
         field.setText(placeholder);
         field.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -159,7 +147,6 @@ public class VueAjoutClient extends JFrame {
         return field;
     }
 
-    // ── Footer ────────────────────────────────────────────────────────────────
     private JPanel buildFooter() {
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 14));
         footer.setBackground(new Color(245, 235, 220));
@@ -186,21 +173,16 @@ public class VueAjoutClient extends JFrame {
         return footer;
     }
 
-    // ── API publique ──────────────────────────────────────────────────────────
-
-    /** Valeur saisie dans le champ Nom (vide si le placeholder est affiché). */
     public String getNom() {
         String v = txtNom.getText().trim();
         return v.equals("Ex : Dupont") ? "" : v;
     }
 
-    /** Valeur saisie dans le champ Prénom. */
     public String getPrenom() {
         String v = txtPrenom.getText().trim();
         return v.equals("Ex : Marie") ? "" : v;
     }
 
-    /** Valeur saisie dans le champ Solde, ou null si non numérique. */
     public Double getSolde() {
         String v = txtSolde.getText().trim();
         if (v.equals("Ex : 20.00")) return null;
@@ -211,19 +193,16 @@ public class VueAjoutClient extends JFrame {
         }
     }
 
-    /** Affiche un message de succès (vert) dans le formulaire. */
     public void afficherSucces(String message) {
         lblMessage.setForeground(new Color(0, 130, 60));
         lblMessage.setText("✔ " + message);
     }
 
-    /** Affiche un message d'erreur (rouge) dans le formulaire. */
     public void afficherErreur(String message) {
         lblMessage.setForeground(ROUGE);
         lblMessage.setText("✘ " + message);
     }
 
-    /** Remet le formulaire à zéro (placeholders + message). */
     public void reinitialiser() {
         lblMessage.setText(" ");
         resetField(txtNom,    "Ex : Dupont");
@@ -236,7 +215,6 @@ public class VueAjoutClient extends JFrame {
         field.setText(placeholder);
     }
 
-    // ── Listeners ─────────────────────────────────────────────────────────────
     public void addValiderListener(ActionListener listener)  { btnValider.addActionListener(listener); }
     public void addAnnulerListener(ActionListener listener)  { btnAnnuler.addActionListener(listener); }
 

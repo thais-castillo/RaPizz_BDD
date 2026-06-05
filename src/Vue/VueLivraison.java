@@ -13,7 +13,7 @@ public class VueLivraison extends JDialog {
     public VueLivraison(Frame parent, String nomPizza, String taille, double prix) {
         super(parent, "Commande confirmée !", true);
 
-        int minutes = new Random().nextInt(46) + 5; // entre 5 et 50 min
+        int minutes = new Random().nextInt(46) + 5;
 
         setSize(550, 560);
         setLocationRelativeTo(parent);
@@ -30,9 +30,6 @@ public class VueLivraison extends JDialog {
         setVisible(true);
     }
 
-    // ──────────────────────────────────────────────────────────
-    //  EN-TÊTE
-    // ──────────────────────────────────────────────────────────
     private JPanel buildHeader() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(VERT);
@@ -65,16 +62,12 @@ public class VueLivraison extends JDialog {
         return p;
     }
 
-    // ──────────────────────────────────────────────────────────
-    //  CONTENU
-    // ──────────────────────────────────────────────────────────
     private JPanel buildContenu(String nomPizza, String taille, double prix, int minutes) {
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.setBackground(BEIGE_FOND);
         p.setBorder(new EmptyBorder(24, 28, 16, 28));
 
-        // ── Bloc ETA ──
         JPanel etaCard = new JPanel();
         etaCard.setLayout(new BoxLayout(etaCard, BoxLayout.Y_AXIS));
         etaCard.setBackground(Color.WHITE);
@@ -107,7 +100,6 @@ public class VueLivraison extends JDialog {
         p.add(etaCard);
         p.add(Box.createVerticalStrut(16));
 
-        // ── Récap commande ──
         JPanel recap = new JPanel(new GridLayout(3, 2, 8, 6));
         recap.setBackground(Color.WHITE);
         recap.setBorder(BorderFactory.createCompoundBorder(
@@ -129,9 +121,6 @@ public class VueLivraison extends JDialog {
         return p;
     }
 
-    // ──────────────────────────────────────────────────────────
-    //  PIED DE PAGE
-    // ──────────────────────────────────────────────────────────
     private JPanel buildFooter() {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 12));
         p.setBackground(new Color(245, 235, 220));
@@ -150,9 +139,6 @@ public class VueLivraison extends JDialog {
         return p;
     }
 
-    // ──────────────────────────────────────────────────────────
-    //  UTILITAIRES
-    // ──────────────────────────────────────────────────────────
     private String heureEstimee(int minutes) {
         java.time.LocalTime maintenant = java.time.LocalTime.now().plusMinutes(minutes);
         return String.format("%02d:%02d", maintenant.getHour(), maintenant.getMinute());

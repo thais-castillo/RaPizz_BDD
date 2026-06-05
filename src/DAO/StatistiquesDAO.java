@@ -19,7 +19,6 @@ public class StatistiquesDAO {
         }
 
         try {
-            // 1. Chargement des indicateurs de base originaux
             String chiffreAffairesTotal = lireChiffreAffairesTotal(cnx);
             String meilleurClient = lireMeilleurClient(cnx);
             String meilleurLivreur = lireMeilleurLivreur(cnx);
@@ -30,13 +29,11 @@ public class StatistiquesDAO {
             String livraisonPlusRapide = lireLivraisonPlusRapide(cnx);
             String ingredientFavori = lireIngredientFavori(cnx);
 
-            // 2. Chargement des extensions
             String moyenneCommandes = extraireMoyenneCommandes(cnx);
             String clientsAuDessusMoyenne = extraireNombreClientsAuDessusMoyenne(cnx);
             String clientMeilleurCA = extraireClientMeilleurCA(cnx);
             String jourPlusCharge = extraireJourPlusLivraisons(cnx);
-            
-            // Gestion du pire livreur
+
             List<String[]> pireLivreurRows = getPireLivreur(cnx);
             String pireLivreurNom = "N/A";
             String pireLivreurRetards = "0 retards";
@@ -50,7 +47,6 @@ public class StatistiquesDAO {
             String pizzaMoinsCommandee = extrairePizzaMoinsCommandee(cnx);
             String nombrePizzasMenu = extraireNombrePizzasUnique(cnx);
 
-            // 3. On instancie l'objet global
             return new Statistiques(
                 chiffreAffairesTotal, meilleurClient, meilleurLivreur,
                 totalCommandes, delaiMoyen, vehiculePlusUtilise,
@@ -73,10 +69,6 @@ public class StatistiquesDAO {
             "0,00", "0", "N/A", "N/A", "N/A", "0 retards", "0", "N/A", "0"
         );
     }
-
-    // =========================================================================
-    // REQUÊTES DE BASE
-    // =========================================================================
 
     private String lireChiffreAffairesTotal(Connection cnx) throws SQLException {
         String requete = "SELECT COALESCE(SUM(prix_pizza), 0) AS brut, "
@@ -208,10 +200,6 @@ public class StatistiquesDAO {
         return "Aucun";
     }
 
-    // =========================================================================
-    // EXTENSIONS ASSAINIES
-    // =========================================================================
-
     private String extraireMoyenneCommandes(Connection cnx) throws SQLException {
         String sql = "SELECT AVG(nombre_commandes) AS moyenne_commandes FROM (SELECT COUNT(*) AS nombre_commandes FROM Livraison GROUP BY Id_Client) AS commandes_clients";
         try (PreparedStatement stmt = cnx.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -300,10 +288,6 @@ public class StatistiquesDAO {
         String[] cols = {"nom", "prix", "ingredient_nom"};
         return fetchRows(cnx, sql, cols);
     }
-
-    // =========================================================================
-    // MÉTHODES UTILITAIRES ET EXTRACTEUR GÉNÉRIQUE
-    // =========================================================================
 
     private List<String[]> fetchRows(Connection cnx, String sql, String[] cols) throws SQLException {
         List<String[]> rows = new java.util.ArrayList<>();

@@ -13,9 +13,6 @@ import Vue.VueRechargeClient;
 
 public class ClientDAO {
 
-    /**
-     * Récupère tous les clients de la base de données
-     */
     public List<Client> getAllClients() {
         List<Client> listeClients = new ArrayList<>();
         String requete = "SELECT Id_Client, nom, prenom, solde, bonification FROM Client ORDER BY nom, prenom";
@@ -62,9 +59,6 @@ public class ClientDAO {
         }
     }
 
-    /**
-     * Appelle la procédure stockée AjouterClient(nom, prenom, solde).
-     */
     public void ajouterClient(String nom, String prenom, double solde) throws SQLException {
         if (solde < 0) {
             throw new IllegalArgumentException("Le solde initial ne peut pas être négatif.");
@@ -85,10 +79,6 @@ public class ClientDAO {
         }
     }
 
-    /**
-     * Retourne tous les clients pour le sélecteur de la vue recharge.
-     * Le nom affiché est "Prénom Nom".
-     */
     public List<VueRechargeClient.ClientItem> listerClients() throws SQLException {
         List<VueRechargeClient.ClientItem> liste = new ArrayList<>();
         String sql = "SELECT Id_Client, nom, prenom, solde FROM Client ORDER BY nom, prenom";
@@ -111,9 +101,6 @@ public class ClientDAO {
         return liste;
     }
 
-    /**
-     * Ajoute le montant au solde actuel du client.
-     */
     public void crediterSolde(int idClient, double montant) throws SQLException {
         String sql = "UPDATE Client SET solde = solde + ? WHERE Id_Client = ?";
 

@@ -20,11 +20,9 @@ public class ControleurRechargeClient {
 
     private void ouvrirVue() {
         try {
-            // 1. Charger la liste des clients depuis la BDD
             ClientDAO dao = new ClientDAO();
             List<ClientItem> clients = dao.listerClients();
 
-            // 2. Créer la vue avec la liste
             vue = new VueRechargeClient(clients);
 
             vue.addAnnulerListener(ev -> {
@@ -52,7 +50,6 @@ public class ControleurRechargeClient {
                     ));
                     vue.reinitialiser();
 
-                    // Recharge la liste depuis la BDD et met à jour les cartes
                     vue.rafraichirClients(dao.listerClients());
 
                 } catch (Exception ex) {
@@ -63,7 +60,6 @@ public class ControleurRechargeClient {
             vue.setVisible(true);
 
         } catch (Exception ex) {
-            // Affiche l'erreur à l'écran pour pouvoir déboguer
             ex.printStackTrace();
             JOptionPane.showMessageDialog(
                 vueMenu,

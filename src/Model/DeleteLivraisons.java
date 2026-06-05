@@ -10,11 +10,9 @@ public class DeleteLivraisons {
     public static void main(String[] args) {
         StatistiquesDAO dao = new StatistiquesDAO();
         try {
-            // supprimer les deux lignes de test
             int deleted = dao.supprimerLivraisonsParIds(21,22);
             System.out.println("Suppression renvoyée : " + deleted);
 
-            // afficher le récapitulatif CA après suppression
             Connection cnx = BaseDeDonnee.getInstance().getDatabase();
             String requete = "SELECT COALESCE(SUM(prix_pizza),0) AS brut, "
                     + "COALESCE(SUM(CASE WHEN gratuit = TRUE THEN prix_pizza ELSE 0 END),0) AS gratuits, "
@@ -30,7 +28,6 @@ public class DeleteLivraisons {
                 }
             }
 
-            // lister les livraisons restantes
             dao.printAllLivraisons();
 
         } catch (SQLException e) {

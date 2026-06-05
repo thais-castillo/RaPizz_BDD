@@ -14,7 +14,6 @@ import Model.BaseDeDonnee;
 public class LivraisonDAO {
 
     public boolean enregistrerLivraison(int idClient, int idPizza, int idLivreur, int idVehicule, String taille, double prixFacture, boolean estGratuit) {
-        // Ta structure exacte
         String requete = "INSERT INTO Livraison (date_, heure, duree, taille, prix_pizza, gratuit, Id_Livreur, Id_Client, Id_Vehicule, id_pizza) " +
                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
@@ -24,11 +23,9 @@ public class LivraisonDAO {
         try (PreparedStatement stmt = cnx.prepareStatement(requete)) {
             long maintenant = System.currentTimeMillis();
             
-            // Séparation Date et Heure
             stmt.setDate(1, new Date(maintenant));
             stmt.setTime(2, new Time(maintenant));
             
-            // Durée inconnue au moment de la commande -> NULL
             stmt.setNull(3, Types.INTEGER);
             
             stmt.setString(4, taille);
@@ -49,7 +46,6 @@ public class LivraisonDAO {
 
     public List<String[]> getLivraisonsEnCours() {
         List<String[]> liste = new ArrayList<>();
-        // On filtre explicitement sur "duree IS NULL"
         String requete = "SELECT l.id_livraison, c.prenom, c.nom, l.heure, p.nom AS pizza_nom, v.type AS v_type " +
                         "FROM Livraison l " +
                         "JOIN Client c ON l.Id_Client = c.Id_Client " +
@@ -88,7 +84,6 @@ public class LivraisonDAO {
             boolean dejaGratuit = false;
 
             try {
-                // 1. Récupérer les informations de la livraison actuelle
                 String sqlInfos = "SELECT Id_Client, prix_pizza, gratuit FROM Livraison WHERE id_livraison = ?";
                 try (PreparedStatement stmtInfos = cnx.prepareStatement(sqlInfos)) {
                     stmtInfos.setInt(1, idLivraison);
@@ -103,10 +98,8 @@ public class LivraisonDAO {
                     }
                 }
 
-                // 2. Règle métier : Si durée > 30 min et que la pizza n'était pas déjà offerte (fidélité)
                     boolean appliquerRetard = (duree > 30) && !dejaGratuit;
 
-                // 3. Mise à jour de la fiche de livraison
                 String sqlUpdateLiv = "UPDATE Livraison SET duree = ?, gratuit = ? WHERE id_livraison = ?";
                 try (PreparedStatement stmtUpdate = cnx.prepareStatement(sqlUpdateLiv)) {
                     stmtUpdate.setInt(1, duree);
@@ -114,9 +107,6 @@ public class LivraisonDAO {
                     stmtUpdate.setInt(3, idLivraison);
                     stmtUpdate.executeUpdate();
                 }
-
-            // CORRECTION : On a supprimé le "UPDATE Client SET solde = solde + ..." 
-            // qui provoquait le double remboursement (14€ au lieu de 7€).
 
                 return true;
 

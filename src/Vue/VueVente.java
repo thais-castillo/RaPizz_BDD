@@ -88,7 +88,6 @@ public class VueVente extends JFrame {
         gbc.insets = new Insets(12, 15, 12, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Instanciation des composants
         cbClients = new JComboBox<>();
         cbPizzas = new JComboBox<>();
         cbTailles = new JComboBox<>(new String[]{"Naine", "Humaine", "Ogresse"});
@@ -96,14 +95,12 @@ public class VueVente extends JFrame {
         cbLivreurs = new JComboBox<>();
         cbVehicules = new JComboBox<>();
 
-        // Ajout des lignes du formulaire
         addFormRow(formCard, gbc, "Sélectionner le Client :", cbClients, 0);
         addFormRow(formCard, gbc, "Pizza demandée :", cbPizzas, 1);
         addFormRow(formCard, gbc, "Format de taille :", cbTailles, 2);
         addFormRow(formCard, gbc, "Livreur désigné :", cbLivreurs, 3);
         addFormRow(formCard, gbc, "Véhicule utilisé :", cbVehicules, 4);
 
-        // Info procédure + trigger (règle automatique)
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
         gbc.insets = new Insets(6, 15, 0, 15);
         JLabel infoSql = new JLabel("<html><body>Insertion via procedure stockee, fidelite et retard geres par la base.</body></html>");
@@ -111,7 +108,6 @@ public class VueVente extends JFrame {
         infoSql.setForeground(TEXTE_MUTED);
         formCard.add(infoSql, gbc);
 
-        // Bouton de validation de commande intégré directement au bas de la carte
         gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
         gbc.insets = new Insets(18, 15, 0, 15);
         btnValider = new JButton("Valider et enregistrer la livraison");
@@ -126,7 +122,6 @@ public class VueVente extends JFrame {
 
         center.add(formCard);
 
-        // Bouton catalogue place sous la carte formulaire
         GridBagConstraints gbcCat = new GridBagConstraints();
         gbcCat.gridy = 1;
         gbcCat.insets = new Insets(18, 0, 0, 0);
@@ -151,7 +146,6 @@ public class VueVente extends JFrame {
         gbc.gridy = row;
         gbc.gridwidth = 1;
         
-        // Label (Gauche)
         gbc.gridx = 0;
         gbc.weightx = 0.3;
         JLabel label = new JLabel(labelText);
@@ -159,7 +153,6 @@ public class VueVente extends JFrame {
         label.setForeground(TEXTE);
         panel.add(label, gbc);
 
-        // ComboBox (Droite)
         gbc.gridx = 1;
         gbc.weightx = 0.7;
         comboBox.setPreferredSize(new Dimension(350, 38));
@@ -188,9 +181,6 @@ public class VueVente extends JFrame {
     public void addValiderListener(ActionListener listener) { btnValider.addActionListener(listener); }
     public void addRetourListener(ActionListener listener) { btnRetour.addActionListener(listener); }
 
-    /**
-     * Ouvre le catalogue PDF de la pizzeria avec le lecteur PDF par défaut du système.
-     */
     private void ouvrirCataloguePDF() {
         File pdf = new File("src/assets/catalogue_rapizz.pdf");
         if (!pdf.exists()) {

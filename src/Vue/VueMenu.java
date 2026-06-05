@@ -12,15 +12,12 @@ public class VueMenu extends JFrame {
     private JButton btnAjoutClient;
     private JButton btnRechargeClient;
     
-
-    // Constantes graphiques unifiées
     private static final Color ROUGE = new Color(180, 30, 30);
     private static final Color BEIGE_FOND = new Color(255, 248, 235);
     private static final Color VERT = new Color(0, 110, 80);
     private static final Color TEXTE = new Color(45, 35, 25);
     private static final Color TEXTE_MUTED = new Color(110, 100, 90);
     
-
 
     public VueMenu() {
         setTitle("RaPizz — Gestion Employé");
@@ -30,7 +27,6 @@ public class VueMenu extends JFrame {
         JPanel root = new JPanel(new BorderLayout());
         root.setBackground(BEIGE_FOND);
 
-        // Construction des sections
         root.add(buildHeader(), BorderLayout.NORTH);
         root.add(buildCenter(), BorderLayout.CENTER);
         root.add(buildFooter(), BorderLayout.SOUTH);
@@ -69,7 +65,6 @@ public class VueMenu extends JFrame {
         center.setBackground(BEIGE_FOND);
         center.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-        // Panneau central sous forme de carte blanche élégante
         JPanel menuCard = new JPanel();
         menuCard.setLayout(new BoxLayout(menuCard, BoxLayout.Y_AXIS));
         menuCard.setBackground(Color.WHITE);
@@ -85,7 +80,6 @@ public class VueMenu extends JFrame {
         menuCard.add(lblSection);
         menuCard.add(Box.createVerticalStrut(25));
 
-        // Boutons
         btnCommander = createStyledMenuButton("Ajouter une commande", VERT);
         btnStats = createStyledMenuButton("Consulter les statistiques", new Color(35, 90, 160));
         btnLivraisons = createStyledMenuButton("Suivi des livraisons en cours", new Color(30, 130, 140));

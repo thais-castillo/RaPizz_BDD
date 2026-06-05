@@ -10,7 +10,6 @@ public class Statistiques {
     private final String livraisonPlusRapide;
     private final String ingredientFavori;
     
-    // Extensions
     private final String moyenneCommandes;
     private final String clientsAuDessusMoyenne;
     private final String clientMeilleurCA;
@@ -21,7 +20,6 @@ public class Statistiques {
     private final String pizzaMoinsCommandee;
     private final String nombrePizzasMenu;
 
-    // Constructeur complet (utilisé par ton StatistiquesDAO)
     public Statistiques(String chiffreAffairesTotal, String meilleurClient, String meilleurLivreur,
                         String totalCommandes, String delaiMoyen, String vehiculePlusUtilise,
                         String pizzaStar, String livraisonPlusRapide, String ingredientFavori,
@@ -48,9 +46,6 @@ public class Statistiques {
         this.nombrePizzasMenu = nombrePizzasMenu;
     }
 
-    // =========================================================================
-    // GETTERS REQUIS PAR VUESTATISTIQUES
-    // =========================================================================
     public String getChiffreAffairesTotal() { return chiffreAffairesTotal; }
     public String getMeilleurClient() { return meilleurClient; }
     public String getMeilleurLivreur() { return meilleurLivreur; }

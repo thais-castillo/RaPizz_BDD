@@ -12,7 +12,7 @@ public class VueSuiviLivraisons extends JFrame {
     private JTable tableau;
     private DefaultTableModel model;
     private JButton btnRetour;
-    private ActionListener actionClotureListener; // Stocke l'action pour les boutons du tableau
+    private ActionListener actionClotureListener;
 
     private static final Color ROUGE = new Color(180, 30, 30);
     private static final Color BEIGE_FOND = new Color(255, 248, 235);
@@ -62,21 +62,19 @@ public class VueSuiviLivraisons extends JFrame {
         center.setBackground(BEIGE_FOND);
         center.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        // Ajout d'une colonne "Action" à la fin
         String[] colonnes = {"ID Commande", "Client à Livrer", "Pizza", "Véhicule", "Heure de Départ", "Temps Restant / Statut", "Action"};
         
         model = new DefaultTableModel(colonnes, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 6; // Seule la colonne du bouton "Action" est cliquable/éditable
+                return column == 6;
             }
         };
 
         tableau = new JTable(model);
         tableau.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        tableau.setRowHeight(35); // Légèrement plus haut pour accueillir confortablement le bouton
+        tableau.setRowHeight(35);
         
-        // Configuration du bouton directement dans la cellule de la colonne 6
         tableau.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
         tableau.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox()));
 
@@ -105,11 +103,8 @@ public class VueSuiviLivraisons extends JFrame {
     public JTable getTableau() { return tableau; }
     public void addRetourListener(ActionListener l) { btnRetour.addActionListener(l); }
     
-    // Remplacement de l'ancien listener par le nouveau système pour le bouton du tableau
     public void addCloturerDirectListener(ActionListener l) { this.actionClotureListener = l; }
     public ActionListener getActionClotureListener() { return actionClotureListener; }
-
-    // --- INNER CLASSES POUR RENDRE LE BOUTON INTERACTIF DANS LE TABLEAU ---
 
     private class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {

@@ -8,9 +8,6 @@ import java.util.List;
 
 public class VueRechargeClient extends JFrame {
 
-    // ══════════════════════════════════════════════════════════
-    //  ClientItem — représente un client dans la liste
-    // ══════════════════════════════════════════════════════════
     public static class ClientItem {
         private final int    id;
         private final String nom;
@@ -30,19 +27,16 @@ public class VueRechargeClient extends JFrame {
         public String toString() { return nom + " (#" + id + ")"; }
     }
 
-    // ── Composants ───────────────────────────────────────────
     private JTextField txtMontant;
     private JButton    btnValider;
     private JButton    btnAnnuler;
     private JLabel     lblMessage;
 
-    // ── État de sélection ────────────────────────────────────
     private List<ClientItem> clients;
     private ClientItem       clientSelectionne = null;
     private JPanel[]         cartesClients;
-    private JPanel           grilleClients; // stocké pour pouvoir la reconstruire
+    private JPanel           grilleClients;
 
-    // ── Palette (identique aux autres vues) ──────────────────
     private static final Color ROUGE       = new Color(180, 30, 30);
     private static final Color BEIGE_FOND  = new Color(255, 248, 235);
     private static final Color ORANGE      = new Color(180, 100, 20);
@@ -50,9 +44,6 @@ public class VueRechargeClient extends JFrame {
     private static final Color TEXTE       = new Color(45, 35, 25);
     private static final Color TEXTE_MUTED = new Color(110, 100, 90);
 
-    // ══════════════════════════════════════════════════════════
-    //  CONSTRUCTEUR
-    // ══════════════════════════════════════════════════════════
     public VueRechargeClient(List<ClientItem> clients) {
         this.clients = clients;
 
@@ -72,9 +63,6 @@ public class VueRechargeClient extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  EN-TÊTE
-    // ══════════════════════════════════════════════════════════
     private JPanel buildHeader() {
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(ORANGE);
@@ -100,9 +88,6 @@ public class VueRechargeClient extends JFrame {
         return header;
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  FORMULAIRE PRINCIPAL
-    // ══════════════════════════════════════════════════════════
     private JPanel buildForm() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(BEIGE_FOND);
@@ -116,7 +101,6 @@ public class VueRechargeClient extends JFrame {
             new EmptyBorder(20, 30, 20, 30)
         ));
 
-        // ── Titre de section ──
         JLabel lblSection = new JLabel("SÉLECTION DU CLIENT");
         lblSection.setFont(new Font("SansSerif", Font.BOLD, 11));
         lblSection.setForeground(TEXTE_MUTED);
@@ -124,7 +108,6 @@ public class VueRechargeClient extends JFrame {
         card.add(lblSection);
         card.add(Box.createVerticalStrut(12));
 
-        // ── Grille de cartes clients dans un ScrollPane ──
         grilleClients = new JPanel(new GridLayout(0, 2, 10, 10));
         grilleClients.setBackground(BEIGE_FOND);
         cartesClients = new JPanel[clients.size()];
@@ -144,7 +127,6 @@ public class VueRechargeClient extends JFrame {
 
         card.add(Box.createVerticalStrut(20));
 
-        // ── Champ montant ──
         JLabel lblTitreMontant = new JLabel("MONTANT À CRÉDITER");
         lblTitreMontant.setFont(new Font("SansSerif", Font.BOLD, 11));
         lblTitreMontant.setForeground(TEXTE_MUTED);
@@ -155,7 +137,6 @@ public class VueRechargeClient extends JFrame {
         txtMontant = addField(card, "Montant à créditer (€) *", "Ex : 15.00");
         card.add(Box.createVerticalStrut(20));
 
-        // ── Message retour ──
         lblMessage = new JLabel(" ");
         lblMessage.setFont(new Font("SansSerif", Font.BOLD, 13));
         lblMessage.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -165,9 +146,6 @@ public class VueRechargeClient extends JFrame {
         return wrapper;
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  CARTE D'UN CLIENT (inspiré de buildCarteTaille dans VueCommande)
-    // ══════════════════════════════════════════════════════════
     private JPanel buildCarteClient(int index) {
         ClientItem client = clients.get(index);
 
@@ -180,7 +158,6 @@ public class VueRechargeClient extends JFrame {
         ));
         card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Icône neutre identique pour tous
         JLabel icone = new JLabel("👤");
         icone.setFont(new Font("SansSerif", Font.PLAIN, 22));
         icone.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -208,7 +185,6 @@ public class VueRechargeClient extends JFrame {
         card.add(Box.createVerticalStrut(4));
         card.add(lblSolde);
 
-        // Clic → sélection
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -234,7 +210,6 @@ public class VueRechargeClient extends JFrame {
         return card;
     }
 
-    // Met à jour les bordures/couleurs pour refléter la sélection (comme VueCommande)
     private void mettreAJourSelectionCartes() {
         for (int i = 0; i < cartesClients.length; i++) {
             boolean selectionne = clients.get(i) == clientSelectionne;
@@ -250,9 +225,6 @@ public class VueRechargeClient extends JFrame {
         }
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  PIED DE PAGE
-    // ══════════════════════════════════════════════════════════
     private JPanel buildFooter() {
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 14));
         footer.setBackground(new Color(245, 235, 220));
@@ -279,9 +251,6 @@ public class VueRechargeClient extends JFrame {
         return footer;
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  UTILITAIRE — champ de saisie avec placeholder
-    // ══════════════════════════════════════════════════════════
     private JTextField addField(JPanel parent, String label, String placeholder) {
         JLabel lbl = new JLabel(label);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -318,19 +287,10 @@ public class VueRechargeClient extends JFrame {
         return field;
     }
 
-    // ══════════════════════════════════════════════════════════
-    //  API PUBLIQUE
-    // ══════════════════════════════════════════════════════════
-
-    /** Retourne le client sélectionné, ou null si aucun. */
     public ClientItem getClientSelectionne() {
         return clientSelectionne;
     }
 
-    /**
-     * Reconstruit les cartes avec une liste de clients mise à jour.
-     * À appeler depuis le contrôleur après un crédit réussi.
-     */
     public void rafraichirClients(List<ClientItem> nouveauxClients) {
         this.clients = nouveauxClients;
         this.clientSelectionne = null;
@@ -342,12 +302,10 @@ public class VueRechargeClient extends JFrame {
             grilleClients.add(cartesClients[i]);
         }
 
-        // Demande à Swing de recalculer l'affichage
         grilleClients.revalidate();
         grilleClients.repaint();
     }
 
-    /** Retourne le montant saisi, ou null si invalide/vide. */
     public Double getMontant() {
         String v = txtMontant.getText().trim();
         if (v.equals("Ex : 15.00")) return null;

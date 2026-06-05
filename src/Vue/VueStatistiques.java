@@ -10,20 +10,19 @@ import java.awt.*;
 
 public class VueStatistiques extends JFrame {
 
-    // Palette de couleurs unifiée harmonisée avec le reste de l'appli (Thème Clair)
     private static final Color ROUGE = new Color(180, 30, 30);
-    private static final Color BEIGE_FOND = new Color(255, 248, 235); // Fond clair de l'application
-    private static final Color SURFACE = Color.WHITE;                  // Cartes blanches épurées
-    private static final Color SURFACE_ALT = Color.WHITE;              // Cartes blanches épurées
-    private static final Color SURFACE_SOFT = new Color(245, 235, 220);// Boutons secondaires
-    private static final Color VERT = new Color(0, 140, 90);           // Vert lisible sur fond blanc
-    private static final Color TEXTE = new Color(45, 35, 25);          // Texte principal sombre
-    private static final Color TEXTE_MUTED = new Color(110, 100, 90);  // Texte secondaire atténué
-    private static final Color BORDER = new Color(220, 210, 195);      // Bordures légères de séparation
+    private static final Color BEIGE_FOND = new Color(255, 248, 235); 
+    private static final Color SURFACE = Color.WHITE;                 
+    private static final Color SURFACE_ALT = Color.WHITE;             
+    private static final Color SURFACE_SOFT = new Color(245, 235, 220);
+    private static final Color VERT = new Color(0, 140, 90);         
+    private static final Color TEXTE = new Color(45, 35, 25);        
+    private static final Color TEXTE_MUTED = new Color(110, 100, 90); 
+    private static final Color BORDER = new Color(220, 210, 195);     
     private final Statistiques stats;
 
     private JButton btnRetour;
-    private JPanel contentCenter; // conteneur principal centré interchangeable
+    private JPanel contentCenter;
     private JButton btnRetourCategories;
     private String selectedCategory = null;
 
@@ -32,7 +31,6 @@ public class VueStatistiques extends JFrame {
         setTitle("RaPizz — Statistiques");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        // Boutons de sélection affichés au centre (écran d'entrée)
         JButton btnClients = new JButton("Clients");
         JButton btnLivraisons = new JButton("Livraisons");
         JButton btnLivreurs = new JButton("Livreurs");
@@ -42,7 +40,6 @@ public class VueStatistiques extends JFrame {
         root.setBackground(BEIGE_FOND);
 
         root.add(buildHeader(), BorderLayout.NORTH);
-        // centre interchangeable : d'abord la grille de boutons, puis les cartes
         contentCenter = new JPanel(new BorderLayout());
         contentCenter.setBackground(BEIGE_FOND);
         contentCenter.setBorder(new EmptyBorder(24, 24, 24, 24));
@@ -52,18 +49,15 @@ public class VueStatistiques extends JFrame {
 
         add(root);
         
-        // Ajustements pour l'affichage plein écran stable
         setSize(1280, 800);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         root.revalidate();
         root.repaint();
         setVisible(true);
 
-        // S'assurer que la fenêtre apparaît devant les autres
         toFront();
         requestFocus();
 
-        // Listeners : afficher les cartes/statistiques dans le même affichage
         btnClients.addActionListener(e -> showCategoryView("Clients"));
         btnLivraisons.addActionListener(e -> showCategoryView("Livraisons"));
         btnLivreurs.addActionListener(e -> showCategoryView("Livreurs"));
@@ -242,7 +236,6 @@ public class VueStatistiques extends JFrame {
         container.setOpaque(false);
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-        // 1. Grille supérieure contenant les 4 cartes
         JPanel cards = new JPanel(new GridLayout(2, 2, 18, 18));
         cards.setOpaque(false);
         cards.add(buildInsightCard("Meilleur client", stats.getMeilleurClient(), "", "Client avec le plus de commandes."));
@@ -251,9 +244,8 @@ public class VueStatistiques extends JFrame {
         cards.add(buildInsightCard("Client avec meilleur CA", premierClientCA(), "", "Client générant le plus de chiffre d'affaires."));
 
         container.add(cards);
-        container.add(Box.createVerticalStrut(24)); // Un peu plus d'espace sous les cartes
+        container.add(Box.createVerticalStrut(24));
 
-        // 2. Zone des titres textuels
         JLabel titre = new JLabel("Commandes par client");
         titre.setFont(new Font("SansSerif", Font.BOLD, 18));
         titre.setForeground(TEXTE);
@@ -269,8 +261,6 @@ public class VueStatistiques extends JFrame {
         container.add(sous);
         container.add(Box.createVerticalStrut(14));
 
-        // 3. CORRECTION : Encapsulation dans un wrapper en BorderLayout
-        // Cela force le JScrollPane à se déployer sur toute la largeur disponible
         JPanel tableWrapper = new JPanel(new BorderLayout());
         tableWrapper.setOpaque(false);
         tableWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
