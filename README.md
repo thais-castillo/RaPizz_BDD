@@ -64,12 +64,13 @@ Mot de passe : Chocolat
 
 | Table | Colonnes |
 |---|---|
-| `Client` | `Id_Client`, `nom`, `prenom` |
+| `Client` | `Id_Client`, `nom`, `prenom`, `solde`, `date_abonnement`, `bonification` |
 | `Livreur` | `Id_Livreur`, `nom`, `prenom` |
 | `Vehicule` | `Id_Vehicule`, `type`, `immatricule` |
-| `Pizza` | `Id_Pizza`, `nom`, `prix` |
-| `Livraison` | `Id_Livraison`, `date_`, `heure`, `prix_pizza`, `gratuit`, `duree`, `Id_Client`, `Id_Livreur`, `Id_Vehicule`, `Id_Pizza` |
-| `contient` | `Id_Pizza`, `Id_Ingredient` |
+| `Pizza` | `id_pizza`, `nom`, `prix` |
+| `Ingredient` | `Id_Ingredient`, `nom` |
+| `Livraison` | `id_livraison`, `date_`, `heure`, `duree`, `taille`, `prix_pizza`, `gratuit`, `Id_Client`, `Id_Livreur`, `Id_Vehicule`, `id_pizza` |
+| `contient` | `id_pizza`, `Id_Ingredient` |
 
 ---
 
