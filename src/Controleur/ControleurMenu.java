@@ -12,6 +12,7 @@ import Vue.VueMenu;
 import Vue.VueStatistiques;
 import Vue.VueSuiviLivraisons;
 import Vue.VueVente;
+import Vue.VueAjoutClient;
 import javax.swing.JOptionPane;
 
 public class ControleurMenu {
@@ -28,9 +29,22 @@ public class ControleurMenu {
         this.vue.addStatsListener(new ActionStats());
         this.vue.addQuitterListener(new ActionQuitter());
         this.vue.addLivraisonsListener(new ActionLivraisons());
+        this.vue.addAjoutClientListener(new ActionAjoutClient());
         
+        new ControleurRechargeClient(vue);
+
         // On gère le style interactif (hover) directement depuis le contrôleur
         gererEffetsHover();
+
+        Color orangeBase = new Color(180, 100, 20);
+        vue.getBtnRechargeClient().addMouseListener(new MouseAdapter() {
+            @Override public void mouseEntered(MouseEvent e) {
+                vue.getBtnRechargeClient().setBackground(orangeBase.brighter());
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                vue.getBtnRechargeClient().setBackground(orangeBase);
+            }
+        });
     }
 
     // À remplacer dans votre ControleurMenu.java :
@@ -101,8 +115,48 @@ public class ControleurMenu {
         VueSuiviLivraisons vsec = new VueSuiviLivraisons();
         new ControleurSuiviLivraisons(vsec); // Le tableau de bord temps réel
         vsec.setVisible(true);
+
     }
 }
+
+    private class ActionAjoutClient implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("[Controleur] Ouverture de la vue Ajouter un client.");
+            VueAjoutClient vueAjout = new VueAjoutClient();
+
+            vueAjout.addValiderListener(ev -> {
+                String nom    = vueAjout.getNom();
+                String prenom = vueAjout.getPrenom();
+                Double solde  = vueAjout.getSolde();
+
+                // Validation basique côté vue
+                if (nom.trim().isEmpty() || prenom.trim().isEmpty()) {
+                    vueAjout.afficherErreur("Le nom et le prénom sont obligatoires.");
+                    return;
+                }
+                if (solde == null) {
+                    vueAjout.afficherErreur("Le solde doit être un nombre valide (ex : 20.00).");
+                    return;
+                }
+
+                try {
+                    // Appel de la procédure stockée AjouterClient
+                    DAO.ClientDAO dao = new DAO.ClientDAO();
+                    dao.ajouterClient(nom, prenom, solde);
+
+                    vueAjout.afficherSucces("Client créé avec succès !");
+                    vueAjout.reinitialiser();
+                } catch (Exception ex) {
+                    System.err.println("[Controleur] Erreur ajout client : " + ex.getMessage());
+                    vueAjout.afficherErreur("Erreur : " + ex.getMessage());
+                }
+            });
+
+            vueAjout.addAnnulerListener(ev -> vueAjout.dispose());
+            vueAjout.setVisible(true);
+        }
+    }
 
     // Gestion propre des animations au survol de la souris
     // Remplace la méthode gererEffetsHover() à la fin de ton ControleurMenu.java :
@@ -157,6 +211,19 @@ public class ControleurMenu {
             @Override
             public void mouseExited(MouseEvent e) {
                 vue.getBtnQuitter().setBackground(rougeBase);
+            }
+        });
+
+        // Effet Hover pour le bouton Ajouter un client (Violet)
+        Color violetBase = new Color(130, 60, 160);
+        vue.getBtnAjoutClient().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                vue.getBtnAjoutClient().setBackground(violetBase.brighter());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                vue.getBtnAjoutClient().setBackground(violetBase);
             }
         });
     }

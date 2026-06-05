@@ -80,49 +80,49 @@ public class LivraisonDAO {
     }
 
     public boolean cloturerLivraison(int idLivraison, int duree) {
-        Connection cnx = BaseDeDonnee.getInstance().getDatabase();
-        if (cnx == null) return false;
+            Connection cnx = BaseDeDonnee.getInstance().getDatabase();
+            if (cnx == null) return false;
 
-        int idClient = -1;
-        double prixPizza = 0.0;
-        boolean dejaGratuit = false;
+                int idClient = -1;
+            double prixPizza = 0.0;
+            boolean dejaGratuit = false;
 
-        try {
-            // 1. Récupérer les informations de la livraison actuelle
-            String sqlInfos = "SELECT Id_Client, prix_pizza, gratuit FROM Livraison WHERE id_livraison = ?";
-            try (PreparedStatement stmtInfos = cnx.prepareStatement(sqlInfos)) {
-                stmtInfos.setInt(1, idLivraison);
-                try (ResultSet rs = stmtInfos.executeQuery()) {
-                    if (rs.next()) {
-                        idClient = rs.getInt("Id_Client");
-                        prixPizza = rs.getDouble("prix_pizza");
-                        dejaGratuit = rs.getBoolean("gratuit");
-                    } else {
-                        return false;
+            try {
+                // 1. Récupérer les informations de la livraison actuelle
+                String sqlInfos = "SELECT Id_Client, prix_pizza, gratuit FROM Livraison WHERE id_livraison = ?";
+                try (PreparedStatement stmtInfos = cnx.prepareStatement(sqlInfos)) {
+                    stmtInfos.setInt(1, idLivraison);
+                    try (ResultSet rs = stmtInfos.executeQuery()) {
+                        if (rs.next()) {
+                            idClient = rs.getInt("Id_Client");
+                            prixPizza = rs.getDouble("prix_pizza");
+                            dejaGratuit = rs.getBoolean("gratuit");
+                        } else {
+                                return false;
+                        }
                     }
                 }
-            }
 
-            // 2. Règle métier : Si durée > 30 min et que la pizza n'était pas déjà offerte (fidélité)
-            boolean appliquerRetard = (duree > 30) && !dejaGratuit;
+                // 2. Règle métier : Si durée > 30 min et que la pizza n'était pas déjà offerte (fidélité)
+                    boolean appliquerRetard = (duree > 30) && !dejaGratuit;
 
-            // 3. Mise à jour de la fiche de livraison
-            String sqlUpdateLiv = "UPDATE Livraison SET duree = ?, gratuit = ? WHERE id_livraison = ?";
-            try (PreparedStatement stmtUpdate = cnx.prepareStatement(sqlUpdateLiv)) {
-                stmtUpdate.setInt(1, duree);
-                stmtUpdate.setBoolean(2, dejaGratuit || appliquerRetard);
-                stmtUpdate.setInt(3, idLivraison);
-                stmtUpdate.executeUpdate();
-            }
+                // 3. Mise à jour de la fiche de livraison
+                String sqlUpdateLiv = "UPDATE Livraison SET duree = ?, gratuit = ? WHERE id_livraison = ?";
+                try (PreparedStatement stmtUpdate = cnx.prepareStatement(sqlUpdateLiv)) {
+                    stmtUpdate.setInt(1, duree);
+                    stmtUpdate.setBoolean(2, dejaGratuit || appliquerRetard);
+                    stmtUpdate.setInt(3, idLivraison);
+                    stmtUpdate.executeUpdate();
+                }
 
             // CORRECTION : On a supprimé le "UPDATE Client SET solde = solde + ..." 
             // qui provoquait le double remboursement (14€ au lieu de 7€).
 
-            return true;
+                return true;
 
-        } catch (SQLException e) {
-            System.err.println("[LivraisonDAO] Erreur lors de la clôture de la livraison : " + e.getMessage());
-            return false;
+            } catch (SQLException e) {
+                System.err.println("[LivraisonDAO] Erreur lors de la clôture de la livraison : " + e.getMessage());
+                return false;
+            }
         }
-    }
 }

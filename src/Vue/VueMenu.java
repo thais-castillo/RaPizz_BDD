@@ -9,6 +9,9 @@ public class VueMenu extends JFrame {
     private JButton btnStats;
     private JButton btnQuitter;
     private JButton btnLivraisons;
+    private JButton btnAjoutClient;
+    private JButton btnRechargeClient;
+    
 
     // Constantes graphiques unifiées
     private static final Color ROUGE = new Color(180, 30, 30);
@@ -16,6 +19,8 @@ public class VueMenu extends JFrame {
     private static final Color VERT = new Color(0, 110, 80);
     private static final Color TEXTE = new Color(45, 35, 25);
     private static final Color TEXTE_MUTED = new Color(110, 100, 90);
+    
+
 
     public VueMenu() {
         setTitle("RaPizz — Gestion Employé");
@@ -84,12 +89,18 @@ public class VueMenu extends JFrame {
         btnCommander = createStyledMenuButton("Ajouter une commande", VERT);
         btnStats = createStyledMenuButton("Consulter les statistiques", new Color(35, 90, 160));
         btnLivraisons = createStyledMenuButton("Suivi des livraisons en cours", new Color(30, 130, 140));
-
+        btnAjoutClient = createStyledMenuButton("Ajouter un client", new Color(130, 60, 160));
+        btnRechargeClient = createStyledMenuButton("Recharger le crédit d'un client", new Color(160, 100, 30));
+       
         menuCard.add(btnCommander);
         menuCard.add(Box.createVerticalStrut(15));
         menuCard.add(btnLivraisons);
         menuCard.add(Box.createVerticalStrut(15));
         menuCard.add(btnStats);
+        menuCard.add(Box.createVerticalStrut(15));
+        menuCard.add(btnAjoutClient);
+        menuCard.add(Box.createVerticalStrut(15));
+        menuCard.add(btnRechargeClient);
         center.add(menuCard);
         return center;
     }
@@ -130,9 +141,13 @@ public class VueMenu extends JFrame {
     public void addStatsListener(ActionListener listener) { btnStats.addActionListener(listener); }
     public void addLivraisonsListener(ActionListener listener) { btnLivraisons.addActionListener(listener); }
     public void addQuitterListener(ActionListener listener) { btnQuitter.addActionListener(listener); }
-
+    public void addAjoutClientListener(ActionListener listener) { btnAjoutClient.addActionListener(listener); }
+    public void addRechargeClientListener(ActionListener listener) { btnRechargeClient.addActionListener(listener); }
+    
+    public JButton getBtnRechargeClient() { return btnRechargeClient; }
     public JButton getBtnCommander() { return btnCommander; }
     public JButton getBtnStats() { return btnStats; }
     public JButton getBtnLivraisons() { return btnLivraisons; }
     public JButton getBtnQuitter() { return btnQuitter; }
+    public JButton getBtnAjoutClient() { return btnAjoutClient; }
 }
