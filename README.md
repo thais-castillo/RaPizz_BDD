@@ -55,9 +55,10 @@ java -cp "bin:lib/mariadb-client.jar" Main
 La base de données est disponible sur PHPMyAdmin, à cette adresse : https://dwarves.iut-fbleau.fr/phpmyadmin/
 
 Identifiant : bribant
+
 Mot de passe : Chocolat
 
-**Note** : Certaines tables ne font pas partie du projet RaPizz.
+> **Note** : Certaines tables ne font pas partie du projet RaPizz.
 
 ### Schéma SQL principal
 
